@@ -1,0 +1,13 @@
+[tools]
+bun = "latest"
+go = "latest"
+java = "21"
+
+node = "latest"
+"npm:corepack" = "latest"
+sbt = "latest"
+scala = "latest"
+uv = "latest"
+
+[settings]
+idiomatic_version_file_enable_tools = ["node"]
