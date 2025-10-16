@@ -11,7 +11,7 @@ if type sheldon &>/dev/null; then
   eval "$(sheldon source)"
 fi
 
-# Load starship prompt if available
+# Load starship prompt
 if type starship &>/dev/null; then
   eval "$(starship init zsh)"
 fi
@@ -31,11 +31,6 @@ fi
 if type nvim &>/dev/null; then
   alias vim=nvim
   alias v=nvim
-fi
-
-# Add kitten ssh if available
-if type kitten &>/dev/null; then
-  alias ssh='kitten ssh'
 fi
 
 # Use gcc-15 and g++-15 if available
@@ -74,8 +69,17 @@ setopt complete_in_word
 setopt print_eight_bit
 setopt no_beep
 
+# SSH
+alias ssh="TERM=xterm ssh"
+
+# Chezmoi
+export EDITOR="code --wait"
+
 # Other aliases
 alias a=./a.out
 alias ccusage="bunx ccusage@latest"
 
-export EDITOR="code --wait"
+# Load custom environment variables
+if [ -f ~/.env.zsh ]; then
+  source ~/.env.zsh
+fi

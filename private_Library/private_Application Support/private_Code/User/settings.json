@@ -20,7 +20,7 @@
   "editor.tabSize": 2,
   "editor.fontFamily": "'Calex Code JP', 'Source Han Code JP'",
   "terminal.integrated.fontFamily": "'Calex Code JP', 'Hack Nerd Font'",
-  "terminal.integrated.fontSize": 16,
+  "terminal.integrated.fontSize": 20,
   "terminal.integrated.fontWeight": "400",
   "editor.fontWeight": "normal",
   "editor.suggestSelection": "first",
@@ -49,7 +49,7 @@
   "terminal.integrated.defaultProfile.linux": "zsh",
   "javascript.updateImportsOnFileMove.enabled": "never",
   "task.allowAutomaticTasks": "on",
-  "editor.fontSize": 18,
+  "editor.fontSize": 20,
   "security.workspace.trust.enabled": false,
   "files.associations": {
     "*.css": "tailwindcss"
