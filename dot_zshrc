@@ -39,6 +39,11 @@ if type gcc-15 &>/dev/null && type g++-15 &>/dev/null; then
   alias g++=g++-15
 fi
 
+# Add bun to PATH (for tools like claude-code)
+if type bun &>/dev/null; then
+  export PATH="$HOME/.bun/bin:$PATH"
+fi
+
 # History
 export HISTFILE=${HOME}/.zsh_history
 export HISTSIZE=1000
