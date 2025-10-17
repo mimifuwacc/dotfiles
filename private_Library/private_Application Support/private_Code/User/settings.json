@@ -173,5 +173,6 @@
   "gitlens.ai.vscode.model": "copilot:gpt-4.1",
   "editor.wordWrap": "wordWrapColumn",
   "gitlens.views.commitDetails.files.layout": "tree",
-  "workbench.sideBar.location": "right"
+  "workbench.sideBar.location": "right",
+  "terminal.integrated.stickyScroll.enabled": false
 }
