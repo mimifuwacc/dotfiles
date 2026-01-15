@@ -174,5 +174,6 @@
   "editor.wordWrap": "wordWrapColumn",
   "gitlens.views.commitDetails.files.layout": "tree",
   "workbench.sideBar.location": "right",
-  "terminal.integrated.stickyScroll.enabled": false
+  "terminal.integrated.stickyScroll.enabled": false,
+  "MATLAB.installPath": "/Applications/MATLAB_R2025a.app/"
 }

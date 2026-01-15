@@ -85,6 +85,5 @@ alias a=./a.out
 alias ccusage="bunx ccusage@latest"
 
 # Load custom environment variables
-if [ -f ~/.env.zsh ]; then
-  source ~/.env.zsh
-fi
+source ~/.config/zsh/env.zsh
+
