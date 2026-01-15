@@ -26,6 +26,8 @@ config.window_background_gradient = {
 	colors = { "#1F2428" },
 }
 
+config.window_background_opacity = 0.8
+
 config.show_new_tab_button_in_tab_bar = false
 
 -- only for nightly builds
@@ -68,6 +70,25 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_wid
 		{ Foreground = { Color = edge_foreground } },
 		{ Text = SOLID_RIGHT_ARROW },
 	}
+end)
+
+wezterm.on("gui-startup", function(cmd)
+  local screen = wezterm.gui.screens().main
+  local ratio = 0.7
+  
+  local width = screen.width * ratio
+  local height = screen.height * ratio
+  
+  local x = (screen.width - width) / 2
+  local y = (screen.height - height) / 2
+
+  local tab, pane, window = wezterm.mux.spawn_window(cmd or {})
+  local gui_window = window:gui_window()
+
+  if gui_window then
+    gui_window:set_inner_size(width, height)
+    gui_window:set_position(x, y)
+  end
 end)
 
 -- and finally, return the configuration to wezterm
