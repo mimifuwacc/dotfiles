@@ -3,7 +3,7 @@ bun = "latest"
 go = "latest"
 java = "21"
 
-node = "latest"
+node = "lts"
 "npm:corepack" = "latest"
 sbt = "latest"
 scala = "latest"
