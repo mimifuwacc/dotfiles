@@ -24,6 +24,7 @@
     pkgs.rectangle
     pkgs.calex-code-jp
     pkgs.nerd-fonts.hack
+    pkgs.rectangle
     pkgs.fastfetch
   ];
 
