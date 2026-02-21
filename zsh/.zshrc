@@ -55,9 +55,6 @@ setopt no_beep
 # SSH
 alias ssh="TERM=xterm ssh"
 
-# Chezmoi
-export EDITOR="code --wait"
-
 # Other aliases
 alias a=./a.out
 alias ccusage="bunx ccusage@latest"
