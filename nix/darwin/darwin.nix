@@ -55,5 +55,7 @@
     enable = true;
   };
 
+  security.pam.services.sudo_local.touchIdAuth = true;
+
   nixpkgs.hostPlatform = "aarch64-darwin";
 }
