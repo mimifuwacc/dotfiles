@@ -6,7 +6,7 @@ tasks:
     cmds:
       - task --list
 
-  darwin:switch:
+  switch:darwin:
     desc: "Update dependencies"
     cmds:
       - test "$(uname)" = "Darwin" || (echo "This task is only for macOS (Darwin)" && exit 1)
