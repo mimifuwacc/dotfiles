@@ -58,7 +58,3 @@ alias ssh="TERM=xterm ssh"
 # Other aliases
 alias a=./a.out
 alias ccusage="bunx ccusage@latest"
-alias claude="claude-chill claude"
-
-# Load custom environment variables
-# source ~/.config/zsh/env.zsh
