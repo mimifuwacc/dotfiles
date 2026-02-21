@@ -26,6 +26,7 @@
     pkgs.nerd-fonts.hack
     pkgs.rectangle
     pkgs.fastfetch
+    pkgs.claude-code
   ];
 
   home.file = {
