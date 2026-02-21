@@ -1,0 +1,10 @@
+[gpg]
+        format = ssh
+[gpg "ssh"]
+        program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
+[commit]
+        gpgsign = true
+[user]
+        signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGPn723klbVxe8VkHSKdtHZs5W4kMljTEup+b7YzNSb3
+        name = "mimifuwacc"
+        email = mail@mimifuwa.cc

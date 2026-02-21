@@ -1,0 +1,13 @@
+version: "3"
+
+tasks:
+  default:
+    desc: "Show task list"
+    cmds:
+      - task --list
+
+  darwin:switch:
+    desc: "Update dependencies"
+    cmds:
+      - test "$(uname)" = "Darwin" || (echo "This task is only for macOS (Darwin)" && exit 1)
+      - sudo --preserve-env=_USERNAME,_HOSTNAME darwin-rebuild switch --flake ~/dotfiles/nix/darwin --impure
