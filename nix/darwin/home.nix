@@ -34,7 +34,7 @@
     ".config/wezterm".source = dotfilesPath "wezterm";
     ".config/sheldon".source = dotfilesPath "sheldon";
     ".config/starship.toml".source = dotfilesPath "starship/starship.toml";
-    ".gitconfig".source = dotfilesPath "git/darwin.gitconfig";
+    ".gitconfig".source = dotfilesPath "git/darwin/.gitconfig";
   };
 
   targets.darwin.copyApps.enable = true;
