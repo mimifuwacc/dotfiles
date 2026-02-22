@@ -1,6 +1,8 @@
 { pkgs, username, ... }:
 {
   environment.systemPackages = with pkgs; [
+    vim
+    git
   ];
 
   nix.enable = false;
