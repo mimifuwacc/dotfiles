@@ -8,40 +8,52 @@
 
   nixpkgs.config.allowUnfree = true;
 
+  programs.home-manager.enable = true;
+  targets.darwin.linkApps.enable = true;
+
   home.packages = [
-    pkgs.go-task
+    # wezterm@nightly
     wezterm.packages.${pkgs.system}.default
-    pkgs.google-chrome
-    pkgs.vscode
-    pkgs.discord
-    pkgs.starship
-    pkgs.eza
-    pkgs.shottr
-    pkgs.raycast
-    pkgs.discord
-    pkgs.nodejs_24
-    pkgs.rectangle
-    pkgs.calex-code-jp
-    pkgs.nerd-fonts.hack
-    pkgs.rectangle
-    pkgs.fastfetch
-    pkgs.claude-code
-    pkgs.orbstack
+
+    # Task runner
+    pkgs.go-task
+
+    # Plugins and tools for zsh
     pkgs.zsh-defer
     pkgs.zsh-syntax-highlighting
     pkgs.zsh-autosuggestions
+    pkgs.starship
+    pkgs.eza
+    pkgs.fastfetch
+
+    # GUI Applications
+    pkgs.google-chrome
+    pkgs.vscode
+    pkgs.discord
+
+    # macOS utilities
+    pkgs.shottr
+    pkgs.raycast
+    pkgs.rectangle
+
+    # Fonts
+    pkgs.calex-code-jp
+    pkgs.nerd-fonts.hack
+
+    # Dev tools
+    pkgs.claude-code
+    pkgs.orbstack
   ];
 
   home.file = {
     "Taskfile.yaml".source = dotfilesPath "Taskfile.yaml";
-    ".config/discord".source = dotfilesPath "discord";
+    ".gitconfig".source = dotfilesPath "git/darwin/.gitconfig";
+
     ".config/wezterm".source = dotfilesPath "wezterm";
     ".config/starship.toml".source = dotfilesPath "starship/starship.toml";
-    ".gitconfig".source = dotfilesPath "git/darwin/.gitconfig";
-  };
 
-  targets.darwin.linkApps.enable = true;
-  programs.home-manager.enable = true;
+    ".config/discord".source = dotfilesPath "discord";
+  };
 
   programs.zsh = {
     enable = true;
