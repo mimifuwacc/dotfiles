@@ -2,18 +2,15 @@
   lib,
   stdenvNoCC,
   fetchzip,
-  sourcesFile,
 }:
 
-let
-  sources = builtins.fromJSON (builtins.readFile sourcesFile);
-in
 stdenvNoCC.mkDerivation rec {
   pname = "notchnook";
-  inherit (sources) version;
+  version = "1.5.5";
 
   src = fetchzip {
-    inherit (sources) url hash;
+    url = "https://notchnook.com/releases/NotchNook-${version}.zip";
+    hash = "sha256-7nVl8yBX2w27ZHzro0ow8qYRgfd1197/Sazr9vWooOc=";
   };
 
   nativeBuildInputs = [ ];
