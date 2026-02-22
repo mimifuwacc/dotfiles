@@ -6,6 +6,11 @@ tasks:
     cmds:
       - task --list
 
+  open:dotfiles:
+    desc: "Open dotfiles in editor"
+    cmds:
+      - code ~/dotfiles
+
   darwin:apply:
     desc: "Update dependencies"
     silent: true
