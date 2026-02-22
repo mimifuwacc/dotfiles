@@ -18,14 +18,6 @@
     # Task runner
     pkgs.go-task
 
-    # Plugins and tools for zsh
-    pkgs.zsh-defer
-    pkgs.zsh-syntax-highlighting
-    pkgs.zsh-autosuggestions
-    pkgs.starship
-    pkgs.eza
-    pkgs.fastfetch
-
     # GUI Applications
     pkgs.google-chrome
     pkgs.vscode
@@ -41,6 +33,7 @@
     pkgs.nerd-fonts.hack
 
     # Dev tools
+    pkgs.fastfetch
     pkgs.claude-code
     pkgs.orbstack
   ];
@@ -50,7 +43,6 @@
     ".gitconfig".source = dotfilesPath "git/darwin/.gitconfig";
 
     ".config/wezterm".source = dotfilesPath "wezterm";
-    ".config/starship.toml".source = dotfilesPath "starship/starship.toml";
 
     ".config/discord".source = dotfilesPath "discord";
   };
@@ -58,6 +50,22 @@
   programs.zsh = {
     enable = true;
     enableCompletion = true;
+
+    autosuggestion.enable = true;
+    syntaxHighlighting.enable = true;
+
+    plugins = [
+      {
+        name = "zsh-nix-shell";
+        file = "nix-shell.plugin.zsh";
+        src = pkgs.fetchFromGitHub {
+          owner = "chisui";
+          repo = "zsh-nix-shell";
+          rev = "v0.8.0";
+          sha256 = "1lzrn0n4fxfcgg65v0qhnj7wnybybqzs4adz7xsrkgmcsr0ii8b7";
+        };
+      }
+    ];
 
     history = {
       size = 100000;
@@ -79,31 +87,36 @@
     };
 
     shellAliases = {
-      ls = "eza --icons --git --time-style relative";
       vim = "nvim";
       ssh = "TERM=xterm ssh";
       ccusage = "bunx ccusage@latest";
     };
 
-    initContent = ''
-      # Environment variables
-      export _USERNAME=$(whoami)
-      export _HOSTNAME=$(hostname -s)
+    sessionVariables = {
+      _USERNAME = "$(whoami)";
+      _HOSTNAME = "$(hostname -s)";
+    };
+  };
 
-      # Starship prompt
-      if type starship &>/dev/null; then
-        eval "$(starship init zsh)"
-      fi
+  programs.starship = {
+    enable = true;
+    enableZshIntegration = true;
+    settings = {
+      add_newline = true;
+      character = {
+        success_symbol = "[➜](bold green)";
+      };
+      package.disabled = true;
+    };
+  };
 
-      # Direnv
-      if type direnv &>/dev/null; then
-        eval "$(direnv hook zsh)"
-      fi
-
-      # Plugins with zsh-defer
-      source ${pkgs.zsh-defer}/share/zsh-defer/zsh-defer.plugin.zsh
-      source ${pkgs.zsh-syntax-highlighting}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-      zsh-defer source ${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-    '';
+  programs.eza = {
+    enable = true;
+    icons = "auto";
+    enableZshIntegration = true;
+    extraOptions = [
+      "--git"
+      "--time-style=relative"
+    ];
   };
 }
