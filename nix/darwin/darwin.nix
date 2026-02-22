@@ -6,6 +6,7 @@
   ];
 
   nix.enable = false;
+  nix.settings.gc.automatic = true;
 
   system.primaryUser = username;
   nix.package = pkgs.nix;
