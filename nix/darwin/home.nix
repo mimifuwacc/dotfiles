@@ -41,6 +41,7 @@
   home.file = {
     "Taskfile.yaml".source = dotfilesPath "Taskfile.yaml";
     ".gitconfig".source = dotfilesPath "git/darwin/.gitconfig";
+    ".config/git/ignore".source = dotfilesPath "git/darwin/ignore";
 
     ".config/wezterm".source = dotfilesPath "wezterm";
 
@@ -96,6 +97,10 @@
       _USERNAME = "$(whoami)";
       _HOSTNAME = "$(hostname -s)";
     };
+
+    initContent = ''
+      eval "$(direnv hook zsh)"
+    '';
   };
 
   programs.starship = {
@@ -118,5 +123,10 @@
       "--git"
       "--time-style=relative"
     ];
+  };
+
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
   };
 }

@@ -8,6 +8,26 @@ tasks:
 
   switch:darwin:
     desc: "Update dependencies"
+    silent: true
     cmds:
       - test "$(uname)" = "Darwin" || (echo "This task is only for macOS (Darwin)" && exit 1)
       - sudo --preserve-env=_USERNAME,_HOSTNAME darwin-rebuild switch --flake ~/dotfiles/nix/darwin --impure
+
+  direnv:init:
+    desc: "Initialize direnv for current directory"
+    dir: "{{.USER_WORKING_DIR}}"
+    silent: true
+    vars:
+      DOTFILES: "{{.HOME}}/dotfiles"
+    cmds:
+      - |
+        if [ -f .envrc ]; then
+          if [ -s .envrc ]; then
+            echo ".envrc is not empty. Cannot initialize."
+            exit 1
+          fi
+        else
+          echo "use nix" >> .envrc
+        fi
+      - test -f shell.nix || cp {{.DOTFILES}}/direnv/shell.nix shell.nix
+      - direnv allow
