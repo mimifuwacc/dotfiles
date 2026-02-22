@@ -6,7 +6,7 @@ tasks:
     cmds:
       - task --list
 
-  switch:darwin:
+  darwin:apply:
     desc: "Update dependencies"
     silent: true
     cmds:
