@@ -27,6 +27,7 @@
     pkgs.shottr
     pkgs.raycast
     pkgs.rectangle
+    pkgs.notchnook
 
     # Fonts
     pkgs.calex-code-jp

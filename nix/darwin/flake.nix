@@ -39,6 +39,9 @@
                 nixpkgs.overlays = [
                   (final: prev: {
                     calex-code-jp = prev.callPackage (dotfilesPath "pkgs/calex-code-jp/default.nix") { };
+                    notchnook = prev.callPackage (dotfilesPath "pkgs/notchnook/default.nix") {
+                      sourcesFile = dotfilesPath "pkgs/notchnook/sources.json";
+                    };
                   })
                 ];
               }
