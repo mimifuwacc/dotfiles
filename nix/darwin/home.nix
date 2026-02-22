@@ -4,7 +4,7 @@
   home.username = username;
   home.homeDirectory = lib.mkForce "/Users/${username}";
 
-  home.stateVersion = "25.11";
+  home.stateVersion = "23.11";
 
   nixpkgs.config.allowUnfree = true;
 
@@ -39,6 +39,6 @@
     ".gitconfig".source = dotfilesPath "git/darwin/.gitconfig";
   };
 
-  targets.darwin.copyApps.enable = true;
+  targets.darwin.linkApps.enable = true;
   programs.home-manager.enable = true;
 }
