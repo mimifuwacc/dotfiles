@@ -6,7 +6,12 @@
   ];
 
   nix.enable = false;
-  nix.settings.gc.automatic = true;
+
+  nix.settings.gc = {
+    automatic = true;
+    interval = [ { Day = 7; } ];
+    options = "--delete-older-than 30d";
+  };
 
   system.primaryUser = username;
   nix.package = pkgs.nix;
