@@ -34,6 +34,7 @@
     pkgs.nerd-fonts.hack
 
     # Dev tools
+    pkgs.devbox
     pkgs.fastfetch
     pkgs.claude-code
     pkgs.orbstack
@@ -129,5 +130,8 @@
   programs.direnv = {
     enable = true;
     nix-direnv.enable = true;
+    config = {
+      hide_env_diff = true;
+    };
   };
 }

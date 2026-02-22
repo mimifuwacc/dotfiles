@@ -1,8 +1,8 @@
-# direnv (nix-shell)
+# nix-shell + direnv +  devbox
 .envrc
 .direnv/
-shell.nix
-default.nix
+devbox.*
+.devbox/
 
 # macOS
 # ref. https://github.com/github/gitignore/blob/37def63bc84ff46b793809e9e8eacd6fa3a25639/Global/macOS.gitignore
