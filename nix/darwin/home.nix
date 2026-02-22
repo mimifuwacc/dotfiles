@@ -38,6 +38,7 @@
     pkgs.fastfetch
     pkgs.claude-code
     pkgs.orbstack
+    pkgs.unityhub
   ];
 
   home.file = {
