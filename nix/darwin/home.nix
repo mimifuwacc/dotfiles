@@ -102,8 +102,8 @@
 
       # Plugins with zsh-defer
       source ${pkgs.zsh-defer}/share/zsh-defer/zsh-defer.plugin.zsh
-      zsh-defer ${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-      zsh-defer ${pkgs.zsh-syntax-highlighting}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+      source ${pkgs.zsh-syntax-highlighting}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+      zsh-defer source ${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh
     '';
   };
 }
