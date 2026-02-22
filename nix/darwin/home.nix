@@ -39,6 +39,7 @@
     pkgs.claude-code
     pkgs.orbstack
     pkgs.unityhub
+    pkgs.uv
   ];
 
   home.file = {
