@@ -27,6 +27,7 @@
     pkgs.rectangle
     pkgs.fastfetch
     pkgs.claude-code
+    pkgs.orbstack
   ];
 
   home.file = {
