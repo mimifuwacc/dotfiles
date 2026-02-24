@@ -13,8 +13,16 @@
     wezterm = {
       url = "github:wez/wezterm?dir=nix";
     };
+    brew-nix = {
+      url = "github:BatteredBunny/brew-nix";
+      inputs.brew-api.follows = "brew-api";
+    };
+    brew-api = {
+      url = "github:BatteredBunny/brew-api";
+      flake = false;
+    };
   };
-  outputs = { self, nixpkgs, nix-darwin, home-manager, wezterm }:
+  outputs = { self, nixpkgs, nix-darwin, home-manager, wezterm, brew-nix, brew-api }:
     let
       # Get the username and hostname from environment variables
       darwinUser = builtins.getEnv "_USERNAME";
@@ -37,10 +45,9 @@
             home-manager.sharedModules = [
               {
                 nixpkgs.overlays = [
+                  brew-nix.overlays.default
                   (final: prev: {
                     calex-code-jp = prev.callPackage (dotfilesPath "pkgs/calex-code-jp/default.nix") { };
-                    notchnook = prev.callPackage (dotfilesPath "pkgs/notchnook/default.nix") { };
-                    unityhub = prev.callPackage (dotfilesPath "pkgs/unityhub/default.nix") { };
                   })
                 ];
               }

@@ -18,17 +18,6 @@
     # Task runner
     pkgs.go-task
 
-    # GUI Applications
-    pkgs.google-chrome
-    pkgs.vscode
-    pkgs.discord
-
-    # macOS utilities
-    pkgs.shottr
-    pkgs.raycast
-    pkgs.rectangle
-    pkgs.notchnook
-
     # Fonts
     pkgs.calex-code-jp
     pkgs.nerd-fonts.hack
@@ -38,8 +27,23 @@
     pkgs.fastfetch
     pkgs.claude-code
     pkgs.orbstack
-    pkgs.unityhub
     pkgs.uv
+
+    # Casks
+    pkgs.brewCasks.visual-studio-code
+    (pkgs.brewCasks.unity-hub.overrideAttrs (oldAttrs: {
+      src = pkgs.fetchurl {
+        url = builtins.head oldAttrs.src.urls;
+        hash = "sha256-fR/m85eG7gE7M2tIA2RhwO7DRmRY9bvA2SvRuHlOz3g=";
+      };
+    }))
+
+    pkgs.brewCasks.discord
+
+    pkgs.brewCasks.shottr
+    pkgs.brewCasks.raycast
+    pkgs.brewCasks.rectangle
+    pkgs.brewCasks.notchnook
   ];
 
   home.file = {
@@ -48,8 +52,6 @@
     ".config/git/ignore".source = dotfilesPath "git/darwin/ignore";
 
     ".config/wezterm".source = dotfilesPath "wezterm";
-
-    ".config/discord".source = dotfilesPath "discord";
   };
 
   programs.zsh = {

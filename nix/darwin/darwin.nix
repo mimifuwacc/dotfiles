@@ -3,6 +3,7 @@
   environment.systemPackages = with pkgs; [
     vim
     git
+    google-chrome # Must be installed under /Applications directory for 1Password extension integration to work properly
   ];
 
   nix.enable = false;
@@ -59,8 +60,11 @@
 
   system.stateVersion = 4;
 
-  programs._1password-gui = {
-    enable = true;
+  programs._1password-gui.enable = true;
+  system.defaults.CustomUserPreferences = {
+    "com.google.Keystone.Agent" = {
+      checkInterval = 0;
+    };
   };
 
   security.pam.services.sudo_local.touchIdAuth = true;
