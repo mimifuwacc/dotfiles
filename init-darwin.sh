@@ -8,7 +8,7 @@ if ! command -v xcode-select &> /dev/null || ! xcode-select -p &> /dev/null; the
 fi
 
 if ! command -v nix &> /dev/null; then
-    curl -fsSL https://install.determinate.systems/nix | sh
+    curl -fsSL https://install.determinate.systems/nix | sh -s -- install
     source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 fi
 
