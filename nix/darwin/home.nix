@@ -28,9 +28,9 @@
     pkgs.claude-code
     pkgs.orbstack
     pkgs.uv
+    pkgs.vscode
 
     # Casks
-    pkgs.brewCasks.visual-studio-code
     (pkgs.brewCasks.unity-hub.overrideAttrs (oldAttrs: {
       src = pkgs.fetchurl {
         url = builtins.head oldAttrs.src.urls;
