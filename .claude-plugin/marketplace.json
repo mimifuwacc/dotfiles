@@ -1,0 +1,16 @@
+{
+  "name": "mimifuwacc-dotfiles",
+  "owner": { "name": "mimifuwacc" },
+  "plugins": [
+    {
+      "name": "cc-svn",
+      "source": {
+        "source": "github",
+        "repo": "mimifuwacc/cc-svn"
+      },
+      "description": "AI-driven parallel development workspace manager using SVN. Enables Git worktree-like branching with cheap copies for feature development.",
+      "version": "0.1.2",
+      "category": "productivity"
+    }
+  ]
+}

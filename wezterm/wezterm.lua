@@ -9,8 +9,12 @@ config.automatically_reload_config = true
 
 config.check_for_updates = false
 
+-- Initial window size (fixed, not dependent on font size)
+config.initial_cols = 160
+config.initial_rows = 48
+
 -- For example, changing the color scheme:
-config.font_size = 24
+config.font_size = 16
 config.font = wezterm.font_with_fallback({
 	{ family = "Calex Code JP" },
 })
@@ -31,7 +35,7 @@ config.window_frame = {
 	border_top_color = "#ec775c",
 	border_bottom_color = "#ec775c",
 
-	font_size = 20.0,
+	font_size = 16.0,
 	font = wezterm.font({ family = "Calex Code JP", weight = "Bold" }),
 }
 
@@ -47,7 +51,6 @@ config.show_new_tab_button_in_tab_bar = false
 -- only for nightly builds
 config.show_close_tab_button_in_tabs = false
 
--- Load theme
 local theme = require("themes.github-dark")
 config.colors = theme
 

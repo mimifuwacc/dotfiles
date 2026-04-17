@@ -3,7 +3,7 @@
   environment.systemPackages = with pkgs; [
     vim
     git
-    google-chrome # Must be installed under /Applications directory for 1Password extension integration to work properly
+    kanata
   ];
 
   nix.enable = false;
@@ -38,25 +38,20 @@
     mineffect = "scale";
   };
 
-  system.keyboard = {
-    enableKeyMapping = true;
-    userKeyMapping =
-      let
-        mkKeyMapping =
-          let
-            hexToInt = s: pkgs.lib.trivial.fromHexString s;
-          in
-          src: dst: {
-            HIDKeyboardModifierMappingSrc = hexToInt src;
-            HIDKeyboardModifierMappingDst = hexToInt dst;
-          };
-        capsLock = "0x700000039";
-        leftCtrl = "0x7000000E0";
-      in
-      [
-        (mkKeyMapping capsLock leftCtrl)
-      ];
+  # Kanata keyboard remapper
+  launchd.daemons.kanata = {
+    serviceConfig = {
+      ProgramArguments = [ "${pkgs.kanata}/bin/kanata" "--cfg" "/etc/kanata.kbd" ];
+      KeepAlive = true;
+      StandardOutPath = "/var/log/kanata.log";
+      StandardErrorPath = "/var/log/kanata.err";
+    };
   };
+
+  environment.etc."kanata.kbd".text = ''
+    (defsrc caps)
+    (deflayer default lctl)
+  '';
 
   system.stateVersion = 4;
 

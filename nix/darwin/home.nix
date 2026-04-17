@@ -15,8 +15,21 @@
     # wezterm@nightly
     wezterm.packages.${pkgs.system}.default
 
+    # Joke tools
+    pkgs.gti
+    pkgs.sl
+    pkgs.cowsay
+
     # Task runner
     pkgs.go-task
+
+    # Cli tools
+    pkgs.neovim
+    pkgs.fzf
+
+    pkgs.subversion
+
+    pkgs.karabiner-elements
 
     # Fonts
     pkgs.calex-code-jp
@@ -34,24 +47,27 @@
     (pkgs.brewCasks.unity-hub.overrideAttrs (oldAttrs: {
       src = pkgs.fetchurl {
         url = builtins.head oldAttrs.src.urls;
-        hash = "sha256-fR/m85eG7gE7M2tIA2RhwO7DRmRY9bvA2SvRuHlOz3g=";
+        hash = "sha256-jQ6svEXqgL3sgXywd/E44uX5Sdl6lBc70nvq9DMROSQ=";
       };
     }))
-
-    pkgs.brewCasks.discord
 
     pkgs.brewCasks.shottr
     pkgs.brewCasks.raycast
     pkgs.brewCasks.rectangle
     pkgs.brewCasks.notchnook
+
+    pkgs.brewCasks.osu
   ];
 
+  # dotfiles
   home.file = {
     "Taskfile.yaml".source = dotfilesPath "Taskfile.yaml";
     ".gitconfig".source = dotfilesPath "git/darwin/.gitconfig";
     ".config/git/ignore".source = dotfilesPath "git/darwin/ignore";
 
     ".config/wezterm".source = dotfilesPath "wezterm";
+    ".config/nvim/init.lua".source = dotfilesPath "nvim/init.lua";
+    ".config/nvim/lua".source = dotfilesPath "nvim/lua";
   };
 
   programs.zsh = {
@@ -97,6 +113,7 @@
       vim = "nvim";
       ssh = "TERM=xterm ssh";
       ccusage = "bunx ccusage@latest";
+      "花譜です！始めます！" = "yarn";
     };
 
     sessionVariables = {
@@ -106,6 +123,7 @@
 
     initContent = ''
       eval "$(direnv hook zsh)"
+      source <(fzf --zsh)
     '';
   };
 
