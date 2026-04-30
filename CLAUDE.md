@@ -35,10 +35,10 @@ The configuration is split across three main files in [nix/darwin/](nix/darwin/)
 1. **[flake.nix](nix/darwin/flake.nix)** - Defines flake inputs, outputs, and the system configuration builder. Uses environment variables `_USERNAME` and `_HOSTNAME` to dynamically configure the system for the current user/host.
 
 2. **[darwin.nix](nix/darwin/darwin.nix)** - System-level configuration including:
-   - System packages (vim, git)
+   - System packages (vim, git, kanata, karabiner-elements)
    - Nix settings (automatic GC every 7 days, delete older than 30 days)
    - macOS defaults (Finder, Dock, keyboard mappings)
-   - Caps Lock → Left Control key remapping
+   - Kanata keyboard remapper (Caps Lock → Left Control)
    - Touch ID for sudo authentication
    - 1Password GUI integration
 
@@ -52,6 +52,7 @@ The configuration is split across three main files in [nix/darwin/](nix/darwin/)
 ### Custom Packages
 
 Custom Nix packages are defined in [pkgs/](pkgs/):
+
 - [pkgs/calex-code-jp/](pkgs/calex-code-jp/) - Japanese programming font
 - [pkgs/notchnook/](pkgs/notchnook/) - Notch management utility (v1.5.5)
 - [pkgs/unityhub/](pkgs/unityhub/) - Unity Hub (v3.16.2)
@@ -61,6 +62,7 @@ These are exposed via an overlay in `flake.nix` (lines 39-44).
 ### File Linking
 
 Home Manager symlinks configuration files from the dotfiles repo to the home directory:
+
 - [Taskfile.yaml](Taskfile.yaml) → `~/Taskfile.yaml`
 - [git/darwin/.gitconfig](git/darwin/.gitconfig) → `~/.gitconfig`
 - [wezterm/](wezterm/) → `~/.config/wezterm`
@@ -69,6 +71,7 @@ Home Manager symlinks configuration files from the dotfiles repo to the home dir
 ### Environment Variables
 
 The following environment variables are set in Zsh and required for Nix flake evaluation:
+
 - `_USERNAME` - Current username (set to `$(whoami)`)
 - `_HOSTNAME` - Current hostname (set to `$(hostname -s)`)
 
@@ -77,6 +80,7 @@ These must be preserved with `sudo --preserve-env=_USERNAME,_HOSTNAME` when runn
 ### Shell Configuration
 
 The shell setup includes:
+
 - **Zsh** with autosuggestions, syntax highlighting, and history substring search
 - **zsh-nix-shell** plugin for better Nix shell integration
 - **Starship** prompt with custom settings
@@ -90,6 +94,47 @@ Wezterm configuration is in [wezterm/wezterm.lua](wezterm/wezterm.lua) with a cu
 ### Git
 
 Git configuration includes GPG signing with 1Password integration (see [git/darwin/.gitconfig](git/darwin/.gitconfig)).
+
+### Keyboard Remapping
+
+Caps Lock → Left Control via **Kanata**, using **Karabiner-Elements**' virtual HID driver.
+
+**Why this combination?**
+
+- Karabiner-Elements v15+ breaks nix-darwin integration ([#1041](https://github.com/LnL7/nix-darwin/issues/1041))
+- Kanata provides lightweight key remapping
+- Only Karabiner's driver is used (no services)
+
+**Configuration:**
+
+- **[darwin.nix:3-9](nix/darwin/darwin.nix#L3-L9)** - Installs `kanata` and `karabiner-elements`
+- **[darwin.nix:43-67](nix/darwin/darwin.nix#L43-L67)** - Kanata daemon with Caps Lock → Left Control
+- **[darwin.nix:71-81](nix/darwin/darwin.nix#L71-L81)** - Karabiner system extension activation
+
+**First-time Setup:**
+
+System extensions require manual approval (macOS security restriction):
+
+```bash
+# 1. Apply configuration (shows approval prompt)
+task darwin:apply
+
+# 2. Approve in System Settings > Privacy & Security > System Extensions
+#    Allow "Karabiner-DriverKit-VirtualHIDDevice"
+
+# 3. Open Karabiner-Elements app once to complete activation
+open /Applications/Karabiner-Elements.app
+
+# 4. Restart Kanata
+sudo launchctl kickstart -k system/org.nixos.kanata
+```
+
+**Verify Kanata:**
+
+```bash
+launchctl list | grep kanata
+cat /tmp/kanata.out.log
+```
 
 ## Key Patterns
 

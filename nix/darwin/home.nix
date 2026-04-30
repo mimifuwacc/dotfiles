@@ -12,6 +12,9 @@
   targets.darwin.linkApps.enable = true;
 
   home.packages = [
+    # Git
+    pkgs.git
+
     # wezterm@nightly
     wezterm.packages.${pkgs.system}.default
 
@@ -19,6 +22,7 @@
     pkgs.gti
     pkgs.sl
     pkgs.cowsay
+    pkgs.cmatrix
 
     # Task runner
     pkgs.go-task
@@ -26,10 +30,6 @@
     # Cli tools
     pkgs.neovim
     pkgs.fzf
-
-    pkgs.subversion
-
-    pkgs.karabiner-elements
 
     # Fonts
     pkgs.calex-code-jp
@@ -41,22 +41,6 @@
     pkgs.claude-code
     pkgs.orbstack
     pkgs.uv
-    pkgs.vscode
-
-    # Casks
-    (pkgs.brewCasks.unity-hub.overrideAttrs (oldAttrs: {
-      src = pkgs.fetchurl {
-        url = builtins.head oldAttrs.src.urls;
-        hash = "sha256-jQ6svEXqgL3sgXywd/E44uX5Sdl6lBc70nvq9DMROSQ=";
-      };
-    }))
-
-    pkgs.brewCasks.shottr
-    pkgs.brewCasks.raycast
-    pkgs.brewCasks.rectangle
-    pkgs.brewCasks.notchnook
-
-    pkgs.brewCasks.osu
   ];
 
   # dotfiles
@@ -64,10 +48,13 @@
     "Taskfile.yaml".source = dotfilesPath "Taskfile.yaml";
     ".gitconfig".source = dotfilesPath "git/darwin/.gitconfig";
     ".config/git/ignore".source = dotfilesPath "git/darwin/ignore";
-
     ".config/wezterm".source = dotfilesPath "wezterm";
     ".config/nvim/init.lua".source = dotfilesPath "nvim/init.lua";
     ".config/nvim/lua".source = dotfilesPath "nvim/lua";
+    ".config/karabiner/karabiner.json" = {
+      source = dotfilesPath "karabiner/karabiner.json";
+      force = true;
+    };
   };
 
   programs.zsh = {
@@ -112,8 +99,6 @@
     shellAliases = {
       vim = "nvim";
       ssh = "TERM=xterm ssh";
-      ccusage = "bunx ccusage@latest";
-      "花譜です！始めます！" = "yarn";
     };
 
     sessionVariables = {

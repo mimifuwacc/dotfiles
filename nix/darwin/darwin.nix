@@ -38,31 +38,25 @@
     mineffect = "scale";
   };
 
-  # Kanata keyboard remapper
-  launchd.daemons.kanata = {
-    serviceConfig = {
-      ProgramArguments = [ "${pkgs.kanata}/bin/kanata" "--cfg" "/etc/kanata.kbd" ];
-      KeepAlive = true;
-      StandardOutPath = "/var/log/kanata.log";
-      StandardErrorPath = "/var/log/kanata.err";
-    };
-  };
-
-  environment.etc."kanata.kbd".text = ''
-    (defsrc caps)
-    (deflayer default lctl)
-  '';
-
   system.stateVersion = 4;
 
-  programs._1password-gui.enable = true;
-  system.defaults.CustomUserPreferences = {
-    "com.google.Keystone.Agent" = {
-      checkInterval = 0;
-    };
-  };
-
   security.pam.services.sudo_local.touchIdAuth = true;
+
+  homebrew = {
+    enable = true;
+    onActivation.cleanup = "none";
+    taps = [];
+    brews = [];
+    casks = [
+      "raycast"
+      "shottr"
+      "visual-studio-code"
+      "1password"
+      "karabiner-elements"
+      "discord"
+      "ghostty"
+    ];
+  };
 
   nixpkgs.hostPlatform = "aarch64-darwin";
 }
