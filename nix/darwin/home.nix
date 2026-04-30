@@ -12,11 +12,10 @@
   targets.darwin.linkApps.enable = true;
 
   home.packages = [
-    # Git
-    pkgs.git
-
-    # wezterm@nightly
-    wezterm.packages.${pkgs.system}.default
+    # Cli tools
+    pkgs.neovim
+    pkgs.fzf
+    pkgs.fastfetch
 
     # Joke tools
     pkgs.gti
@@ -24,23 +23,13 @@
     pkgs.cowsay
     pkgs.cmatrix
 
-    # Task runner
-    pkgs.go-task
-
-    # Cli tools
-    pkgs.neovim
-    pkgs.fzf
-
     # Fonts
     pkgs.calex-code-jp
     pkgs.nerd-fonts.hack
 
     # Dev tools
     pkgs.devbox
-    pkgs.fastfetch
     pkgs.claude-code
-    pkgs.orbstack
-    pkgs.uv
   ];
 
   # dotfiles
@@ -48,7 +37,10 @@
     "Taskfile.yaml".source = dotfilesPath "Taskfile.yaml";
     ".gitconfig".source = dotfilesPath "git/darwin/.gitconfig";
     ".config/git/ignore".source = dotfilesPath "git/darwin/ignore";
-    ".config/wezterm".source = dotfilesPath "wezterm";
+    ".config/ghostty/config" = {
+      source = dotfilesPath "ghostty/config";
+      force = true;
+    };
     ".config/nvim/init.lua".source = dotfilesPath "nvim/init.lua";
     ".config/nvim/lua".source = dotfilesPath "nvim/lua";
     ".config/karabiner/karabiner.json" = {

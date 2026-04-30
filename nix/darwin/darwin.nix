@@ -3,7 +3,8 @@
   environment.systemPackages = with pkgs; [
     vim
     git
-    kanata
+    go-task
+    uv
   ];
 
   nix.enable = false;
@@ -17,17 +18,36 @@
   system.primaryUser = username;
   nix.package = pkgs.nix;
 
-  programs.zsh.enable = true;
+  # Disable documentation to fix derivation warning
+  documentation.enable = false;
 
   nixpkgs.config.allowUnfree = true;
 
+  # Environment variables
+  environment.variables = {
+    EDITOR = "nvim";
+    LANG = "en_JP.UTF-8";
+    LC_ALL = "en_JP.UTF-8";
+  };
+
+  system.stateVersion = 4;
+
+  security.pam.services.sudo_local.touchIdAuth = true;
+
+  programs.zsh.enable = true;
+
+  # Finder
   system.defaults.finder = {
     AppleShowAllExtensions = true;
     AppleShowAllFiles = true;
     FXEnableExtensionChangeWarning = false;
     ShowPathbar = true;
+    ShowStatusBar = false;
+    _FXSortFoldersFirst = true;
+    FXDefaultSearchScope = "SCcf";  # Current folder
   };
 
+  # Dock
   system.defaults.dock = {
     autohide = true;
     show-recents = false;
@@ -36,17 +56,59 @@
     largesize = 100;
     orientation = "bottom";
     mineffect = "scale";
+    wvous-br-corner = 14;
   };
 
-  system.stateVersion = 4;
+  # Global settings
+  system.defaults.NSGlobalDomain = {
+    AppleInterfaceStyle = "Dark";
+    NSAutomaticCapitalizationEnabled = false;
+    NSAutomaticPeriodSubstitutionEnabled = false;
+    NSAutomaticSpellingCorrectionEnabled = false;
+    NSAutomaticDashSubstitutionEnabled = false;
+    NSAutomaticQuoteSubstitutionEnabled = false;
+    ApplePressAndHoldEnabled = false;
+    AppleScrollerPagingBehavior = true;
+    "com.apple.keyboard.fnState" = true;
+    "com.apple.springing.enabled" = true;
+    "com.apple.springing.delay" = 0.5;
+    "com.apple.swipescrolldirection" = true;
+    "com.apple.trackpad.forceClick" = true;
+    "com.apple.trackpad.scaling" = 1.5;
+  };
 
-  security.pam.services.sudo_local.touchIdAuth = true;
+  # Control Center
+  system.defaults.controlcenter = {
+    Sound = true;
+    BatteryShowPercentage = true;
+  };
 
+  # Trackpad
+  system.defaults.trackpad = {
+    ActuationStrength = 0;
+    FirstClickThreshold = 1;
+    SecondClickThreshold = 1;
+  };
+
+  # Custom preferences
+  system.defaults.CustomUserPreferences = {
+    "com.apple.symbolichotkeys" = {
+      AppleSymbolicHotKeys = {
+        "64" = { enabled = 0; };   # Cmd+Space (Spotlight)
+        "65" = { enabled = 0; };   # Cmd+Option+Space (Spotlight)
+      };
+    };
+    "NSGlobalDomain" = {
+      NSWindowResizeTime = 0.1;    # Faster window animations
+      NSNavPanelExpandedStateForSaveMode = true;  # Expanded save dialogs
+      NSNavPanelExpandedStateForSaveMode2 = true;
+    };
+  };
+
+  # use brew to install GUI applications
   homebrew = {
     enable = true;
     onActivation.cleanup = "none";
-    taps = [];
-    brews = [];
     casks = [
       "raycast"
       "shottr"
@@ -55,6 +117,7 @@
       "karabiner-elements"
       "discord"
       "ghostty"
+      "orbstack"
     ];
   };
 
