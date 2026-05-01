@@ -1,4 +1,4 @@
-{ pkgs, lib, username, wezterm, df, ... }:
+{ pkgs, lib, username, df, ... }:
 
 {
   home.username = username;
