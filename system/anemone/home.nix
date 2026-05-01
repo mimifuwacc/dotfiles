@@ -12,10 +12,12 @@
   targets.darwin.linkApps.enable = true;
 
   home.packages = [
+    # Default tools for dotfiles
+    pkgs.go-task
+
     # Cli tools
     pkgs.neovim
     pkgs.git
-    pkgs.go-task
     pkgs.fzf
     pkgs.fastfetch
 
