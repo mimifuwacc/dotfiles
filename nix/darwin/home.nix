@@ -1,4 +1,4 @@
-{ pkgs, lib, username, wezterm, dotfilesPath, ... }:
+{ pkgs, lib, username, wezterm, df, ... }:
 
 {
   home.username = username;
@@ -34,107 +34,23 @@
 
   # dotfiles
   home.file = {
-    "Taskfile.yaml".source = dotfilesPath "Taskfile.yaml";
-    ".gitconfig".source = dotfilesPath "git/darwin/.gitconfig";
-    ".config/git/ignore".source = dotfilesPath "git/darwin/ignore";
+    "Taskfile.yaml".source = df "Taskfile.yaml";
+    ".gitconfig".source = df "git/darwin/.gitconfig";
+    ".config/git/ignore".source = df "git/darwin/ignore";
     ".config/ghostty/config" = {
-      source = dotfilesPath "ghostty/config";
+      source = df "ghostty/config";
       force = true;
     };
-    ".config/nvim/init.lua".source = dotfilesPath "nvim/init.lua";
-    ".config/nvim/lua".source = dotfilesPath "nvim/lua";
+    ".config/nvim/init.lua".source = df "nvim/init.lua";
+    ".config/nvim/lua".source = df "nvim/lua";
     ".config/karabiner/karabiner.json" = {
-      source = dotfilesPath "karabiner/karabiner.json";
+      source = df "karabiner/karabiner.json";
       force = true;
     };
   };
 
-  programs.zsh = {
-    enable = true;
-    enableCompletion = true;
-
-    autosuggestion.enable = true;
-    syntaxHighlighting.enable = true;
-
-    plugins = [
-      {
-        name = "zsh-nix-shell";
-        file = "nix-shell.plugin.zsh";
-        src = pkgs.fetchFromGitHub {
-          owner = "chisui";
-          repo = "zsh-nix-shell";
-          rev = "v0.8.0";
-          sha256 = "1lzrn0n4fxfcgg65v0qhnj7wnybybqzs4adz7xsrkgmcsr0ii8b7";
-        };
-      }
-    ];
-
-    history = {
-      size = 100000;
-      save = 100000;
-      path = "$HOME/.zsh_history";
-      share = true;
-      extended = true;
-      ignoreDups = true;
-      ignoreAllDups = true;
-      ignoreSpace = true;
-      expireDuplicatesFirst = true;
-      saveNoDups = true;
-    };
-
-    historySubstringSearch = {
-      enable = true;
-      searchUpKey = ["^P"];
-      searchDownKey = ["^N"];
-    };
-
-    shellAliases = {
-      vim = "nvim";
-      ssh = "TERM=xterm ssh";
-    };
-
-    sessionVariables = {
-      _USERNAME = "$(whoami)";
-      _HOSTNAME = "$(hostname -s)";
-    };
-
-    initContent = ''
-      # brew PATH
-      if [ -d /opt/homebrew ]; then
-        export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
-      fi
-      eval "$(direnv hook zsh)"
-      source <(fzf --zsh)
-    '';
-  };
-
-  programs.starship = {
-    enable = true;
-    enableZshIntegration = true;
-    settings = {
-      add_newline = true;
-      character = {
-        success_symbol = "[➜](bold green)";
-      };
-      package.disabled = true;
-    };
-  };
-
-  programs.eza = {
-    enable = true;
-    icons = "auto";
-    enableZshIntegration = true;
-    extraOptions = [
-      "--git"
-      "--time-style=relative"
-    ];
-  };
-
-  programs.direnv = {
-    enable = true;
-    nix-direnv.enable = true;
-    config = {
-      hide_env_diff = true;
-    };
-  };
+  imports = [
+    # Import zsh configuration
+    (df "zsh/default.nix")
+  ];
 }

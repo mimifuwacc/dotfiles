@@ -29,7 +29,7 @@
       darwinHost = builtins.getEnv "_HOSTNAME";
 
       # full path to a dotfiles, e.g. "/Users/username/dotfiles/zsh/.zshrc"
-      dotfilesPath = path: "/Users/${darwinUser}/dotfiles/${path}";
+      df = path: "/Users/${darwinUser}/dotfiles/${path}";
 
       mkDarwinSystem = { hostname, username }: nix-darwin.lib.darwinSystem {
         system = "aarch64-darwin";
@@ -41,13 +41,13 @@
             users.users.${username}.home = "/Users/${username}";
             home-manager.useUserPackages = true;
             home-manager.users.${username} = { pkgs, lib, ... }:
-              import ./home.nix { inherit pkgs lib username wezterm dotfilesPath; };
+              import ./home.nix { inherit pkgs lib username wezterm df; };
             home-manager.sharedModules = [
               {
                 nixpkgs.overlays = [
                   brew-nix.overlays.default
                   (final: prev: {
-                    calex-code-jp = prev.callPackage (dotfilesPath "pkgs/calex-code-jp/default.nix") { };
+                    calex-code-jp = prev.callPackage (df "pkgs/calex-code-jp/default.nix") { };
                   })
                 ];
               }
@@ -56,7 +56,7 @@
         ];
         specialArgs = {
           inherit (nixpkgs) lib;
-          inherit username wezterm dotfilesPath;
+          inherit username wezterm df;
         };
       };
     in {
