@@ -12,9 +12,6 @@
   targets.darwin.linkApps.enable = true;
 
   home.packages = [
-    # Default tools for dotfiles
-    pkgs.go-task
-
     # Cli tools
     pkgs.neovim
     pkgs.git
@@ -56,6 +53,9 @@
   };
 
   imports = [
+    # Import default packages
+    (df "packages/default.nix")
+
     # Import zsh configuration
     (df "zsh/default.nix")
   ];
