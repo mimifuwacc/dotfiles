@@ -28,8 +28,8 @@
       darwinUser = builtins.getEnv "_USERNAME";
       darwinHost = builtins.getEnv "_HOSTNAME";
 
-      # full path to a dotfiles, e.g. "/Users/username/dotfiles/zsh/.zshrc"
-      df = path: "/Users/${darwinUser}/dotfiles/${path}";
+      # relative path from flake dir to dotfiles root, then to the target path
+      df = path: ./../../${path};
 
       mkDarwinSystem = { hostname, username }: nix-darwin.lib.darwinSystem {
         system = "aarch64-darwin";
