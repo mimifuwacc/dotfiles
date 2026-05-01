@@ -26,8 +26,8 @@
   # Environment variables
   environment.variables = {
     EDITOR = "nvim";
-    LANG = "en_JP.UTF-8";
-    LC_ALL = "en_JP.UTF-8";
+    LANG = "ja_JP.UTF-8";
+    LC_ALL = "ja_JP.UTF-8";
   };
 
   system.stateVersion = 4;
@@ -118,6 +118,7 @@
       "discord"
       "ghostty"
       "orbstack"
+      "google-chrome"
     ];
   };
 

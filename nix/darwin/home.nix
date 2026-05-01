@@ -99,6 +99,10 @@
     };
 
     initContent = ''
+      # brew PATH
+      if [ -d /opt/homebrew ]; then
+        export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
+      fi
       eval "$(direnv hook zsh)"
       source <(fzf --zsh)
     '';
