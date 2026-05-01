@@ -4,7 +4,7 @@
   home.username = username;
   home.homeDirectory = lib.mkForce "/Users/${username}";
 
-  home.stateVersion = "23.11";
+  home.stateVersion = "24.11";
 
   nixpkgs.config.allowUnfree = true;
 
