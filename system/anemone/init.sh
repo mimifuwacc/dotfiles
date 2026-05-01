@@ -12,6 +12,11 @@ if ! command -v nix &> /dev/null; then
     source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 fi
 
+if ! command -v brew &> /dev/null; then
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
+
 export _USERNAME=$(whoami)
 export _HOSTNAME=$(hostname -s)
-sudo --preserve-env=_USERNAME,_HOSTNAME nix run nix-darwin/master#darwin-rebuild -- switch --flake ./system/anemone/ --impure
+export FLAKE_DIR="/Users/$_USERNAME/dotfiles/system/anemone"
+sudo -H --preserve-env=_USERNAME,_HOSTNAME darwin-rebuild switch --flake "$FLAKE_DIR" --impure

@@ -11,22 +11,17 @@ tasks:
     cmds:
       - code ~/dotfiles
 
-  darwin:apply:
+  apply:
     desc: "Apply Nix configuration"
     silent: true
     cmds:
-      - test "$(uname)" = "Darwin" || (echo "This task is only for macOS (Darwin)" && exit 1)
-      - sudo --preserve-env=_USERNAME,_HOSTNAME darwin-rebuild switch --flake ~/dotfiles/nix/darwin --impure
+      - ~/dotfiles/system/{{.CLI_ARGS}}/apply.sh
 
-  darwin:update:
+  update:
     desc: "Update flake.lock and apply"
     silent: true
     cmds:
-      - test "$(uname)" = "Darwin" || (echo "This task is only for macOS (Darwin)" && exit 1)
-      - sudo chown -R $(whoami):staff ~/dotfiles/.git
-      - sudo chown $(whoami):staff ~/dotfiles/nix/darwin/flake.lock 2>/dev/null || true
-      - nix flake update --flake ~/dotfiles/nix/darwin
-      - sudo --preserve-env=_USERNAME,_HOSTNAME darwin-rebuild switch --flake ~/dotfiles/nix/darwin --impure
+      - ~/dotfiles/system/{{.CLI_ARGS}}/apply.sh --update
 
   dev:init:
     desc: "Initialize devbox & direnv"

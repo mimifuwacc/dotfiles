@@ -1,10 +1,7 @@
 { pkgs, username, ... }:
 {
   environment.systemPackages = with pkgs; [
-    vim
-    git
-    go-task
-    uv
+    # System-level packages only (not for user commands)
   ];
 
   nix.enable = false;
@@ -108,7 +105,11 @@
   # use brew to install GUI applications
   homebrew = {
     enable = true;
-    onActivation.cleanup = "none";
+    onActivation = {
+    cleanup = "uninstall";
+    autoUpdate = true;
+    upgrade = true;
+  };
     casks = [
       "raycast"
       "shottr"

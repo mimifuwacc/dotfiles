@@ -47,7 +47,7 @@
                 nixpkgs.overlays = [
                   brew-nix.overlays.default
                   (final: prev: {
-                    calex-code-jp = prev.callPackage (df "pkgs/calex-code-jp/default.nix") { };
+                    calex-code-jp = prev.callPackage (df "fonts/calex-code-jp/default.nix") { };
                   })
                 ];
               }

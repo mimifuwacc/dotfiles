@@ -14,6 +14,8 @@
   home.packages = [
     # Cli tools
     pkgs.neovim
+    pkgs.git
+    pkgs.go-task
     pkgs.fzf
     pkgs.fastfetch
 
@@ -28,6 +30,7 @@
     pkgs.nerd-fonts.hack
 
     # Dev tools
+    pkgs.uv
     pkgs.devbox
     pkgs.claude-code
   ];
@@ -35,16 +38,17 @@
   # dotfiles
   home.file = {
     "Taskfile.yaml".source = df "Taskfile.yaml";
-    ".gitconfig".source = df "git/darwin/.gitconfig";
-    ".config/git/ignore".source = df "git/darwin/ignore";
-    ".config/ghostty/config" = {
-      source = df "ghostty/config";
-      force = true;
-    };
+    ".gitconfig".source = df "git/anemone.gitconfig";
+    ".config/git/ignore".source = df "git/anemone.ignore";
     ".config/nvim/init.lua".source = df "nvim/init.lua";
     ".config/nvim/lua".source = df "nvim/lua";
+
     ".config/karabiner/karabiner.json" = {
       source = df "karabiner/karabiner.json";
+      force = true;
+    };
+    ".config/ghostty/config" = {
+      source = df "ghostty/config";
       force = true;
     };
   };
