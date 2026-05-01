@@ -10,16 +10,8 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    brew-nix = {
-      url = "github:BatteredBunny/brew-nix";
-      inputs.brew-api.follows = "brew-api";
-    };
-    brew-api = {
-      url = "github:BatteredBunny/brew-api";
-      flake = false;
-    };
   };
-  outputs = { self, nixpkgs, nix-darwin, home-manager, brew-nix, brew-api }:
+  outputs = { self, nixpkgs, nix-darwin, home-manager }:
     let
       # Get the username and hostname from environment variables
       darwinUser = builtins.getEnv "_USERNAME";
@@ -42,7 +34,6 @@
             home-manager.sharedModules = [
               {
                 nixpkgs.overlays = [
-                  brew-nix.overlays.default
                   (final: prev: {
                     calex-code-jp = prev.callPackage (df "fonts/calex-code-jp/default.nix") { };
                   })
