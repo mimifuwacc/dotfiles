@@ -14,14 +14,34 @@ tasks:
   apply:
     desc: "Apply Nix configuration"
     silent: true
+    vars:
+      HOSTNAME:
+        sh: hostname -s
+      FIRST_ARG: "{{if .CLI_ARGS}}{{index .CLI_ARGS 0}}{{else}}{{end}}"
     cmds:
-      - ~/dotfiles/system/{{.CLI_ARGS}}/apply.sh
+      - |
+        TARGET="{{.FIRST_ARG}}"
+        TARGET="${TARGET:-{{.HOSTNAME}}}"
 
-  update:
+        DIR="$HOME/dotfiles/system/$TARGET"
+
+        if [ ! -d "$DIR" ]; then
+          echo "Error: System config for \"$TARGET\" not found at $DIR"
+          exit 1
+        fi
+
+        if [ -n "{{.FIRST_ARG}}" ]; then
+          shift
+        fi
+
+        exec "$DIR/apply.sh" "$@" {{.ARGS}}
+
+  apply:update:
     desc: "Update flake.lock and apply"
     silent: true
     cmds:
-      - ~/dotfiles/system/{{.CLI_ARGS}}/apply.sh --update
+      - task: apply
+        vars: { ARGS: "--update {{.CLI_ARGS}}" }
 
   dev:init:
     desc: "Initialize devbox & direnv"
