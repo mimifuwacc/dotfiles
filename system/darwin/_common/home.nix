@@ -11,34 +11,28 @@
   programs.home-manager.enable = true;
   targets.darwin.linkApps.enable = true;
 
-  home.packages = [
+  home.packages = with pkgs; [
     # Cli tools
-    pkgs.neovim
-    pkgs.git
-    pkgs.fzf
-    pkgs.fastfetch
-
-    # Joke tools
-    pkgs.gti
-    pkgs.sl
-    pkgs.cowsay
-    pkgs.cmatrix
+    neovim
+    git
+    fzf
+    fastfetch
 
     # Fonts
-    pkgs.calex-code-jp
-    pkgs.nerd-fonts.hack
+    calex-code-jp
+    nerd-fonts.hack
 
     # Dev tools
-    pkgs.uv
-    pkgs.devbox
-    pkgs.claude-code
+    uv
+    devbox
+    claude-code
   ];
 
   # dotfiles
   home.file = {
     "Taskfile.yaml".source = df "Taskfile.yaml";
-    ".gitconfig".source = df "git/anemone.gitconfig";
-    ".config/git/ignore".source = df "git/anemone.ignore";
+    ".gitconfig".source = df "git/darwin.gitconfig";
+    ".config/git/ignore".source = df "git/darwin.ignore";
     ".config/nvim/init.lua".source = df "nvim/init.lua";
     ".config/nvim/lua".source = df "nvim/lua";
 

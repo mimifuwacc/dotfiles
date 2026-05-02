@@ -1,5 +1,5 @@
 {
-  description = "Darwin system flake";
+  description = "Darwin system flake for multiple machines";
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nix-darwin = {
@@ -13,25 +13,32 @@
   };
   outputs = { self, nixpkgs, nix-darwin, home-manager }:
     let
-      # Get the username and hostname from environment variables
-      darwinUser = builtins.getEnv "_USERNAME";
-      darwinHost = builtins.getEnv "_HOSTNAME";
+      lib = nixpkgs.lib;
 
-      # relative path from flake dir to dotfiles root, then to the target path
+      # Get username from environment variable
+      username = builtins.getEnv "_USERNAME";
+
+      # relative path from darwin dir to dotfiles root
       df = path: ./../../${path};
 
       mkDarwinSystem = { hostname, username }: nix-darwin.lib.darwinSystem {
         system = "aarch64-darwin";
         modules = [
-          ./darwin.nix
+          ./_common/darwin.nix
           home-manager.darwinModules.home-manager
           {
             networking.hostName = hostname;
             users.users.${username}.home = "/Users/${username}";
             home-manager.useUserPackages = true;
             home-manager.users.${username} = { pkgs, lib, ... }:
-              import ./home.nix { inherit pkgs lib username df; };
+              import ./_common/home.nix { inherit pkgs lib username hostname df; };
             home-manager.sharedModules = [
+              ({ config, pkgs, ... }: {
+                _module.args = {
+                  inherit lib username hostname df;
+                };
+                imports = [ ./${hostname}/hosts.nix ];
+              })
               {
                 nixpkgs.overlays = [
                   (final: prev: {
@@ -44,13 +51,17 @@
         ];
         specialArgs = {
           inherit (nixpkgs) lib;
-          inherit username df;
+          inherit username hostname df;
         };
       };
     in {
-      darwinConfigurations.${darwinHost} = mkDarwinSystem {
-        hostname = darwinHost;
-        username = darwinUser;
+      darwinConfigurations.anemone = mkDarwinSystem {
+        hostname = "anemone";
+        username = username;
+      };
+      darwinConfigurations.nemophila = mkDarwinSystem {
+        hostname = "nemophila";
+        username = username;
       };
     };
 }

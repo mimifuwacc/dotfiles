@@ -2,7 +2,11 @@
 
 set -euo pipefail
 
-# Parse arguments
+# Get target hostname from first argument
+TARGET_HOSTNAME="$1"
+shift
+
+# Parse remaining arguments
 UPDATE=0
 while [[ $# -gt 0 ]]; do
     case $1 in
@@ -11,17 +15,23 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-# Get current hostname
-TARGET_OS="Darwin"
-HOSTNAME="anemone"
+# Check if current hostname matches the target hostname
+CURRENT_HOSTNAME=$(hostname -s | tr '[:upper:]' '[:lower:]')
+if [[ "$CURRENT_HOSTNAME" != "$TARGET_HOSTNAME" ]]; then
+    echo "Error: This configuration is for '$TARGET_HOSTNAME', but current hostname is '$CURRENT_HOSTNAME'"
+    exit 1
+fi
+
+# Set environment variables for nix-darwin
+export _USERNAME=$(whoami)
+export _HOSTNAME="$TARGET_HOSTNAME"
 
 USERNAME=$(whoami)
-
-FLAKE_DIR="/Users/$USERNAME/dotfiles/system/anemone"
+FLAKE_DIR="/Users/$USERNAME/dotfiles/system/darwin"
 
 # Check if running on target OS
-if [[ "$(uname)" != "$TARGET_OS" ]]; then
-    echo "Error: This script is only for $TARGET_OS"
+if [[ "$(uname)" != "Darwin" ]]; then
+    echo "Error: This script is only for macOS (Darwin)"
     exit 1
 fi
 
@@ -50,4 +60,4 @@ if [[ $UPDATE -eq 1 ]]; then
 fi
 
 # Apply configuration
-sudo --preserve-env=HOME,_USERNAME,_HOSTNAME darwin-rebuild switch --flake "$FLAKE_DIR" --impure
+sudo --preserve-env=HOME,_USERNAME,_HOSTNAME darwin-rebuild switch --flake "$FLAKE_DIR#$TARGET_HOSTNAME" --impure

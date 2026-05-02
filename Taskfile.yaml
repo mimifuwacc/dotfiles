@@ -16,25 +16,20 @@ tasks:
     silent: true
     vars:
       HOSTNAME:
-        sh: hostname -s
-      FIRST_ARG: "{{if .CLI_ARGS}}{{index .CLI_ARGS 0}}{{else}}{{end}}"
+        sh: hostname -s | tr '[:upper:]' '[:lower:]'
     cmds:
       - |
-        TARGET="{{.FIRST_ARG}}"
+        TARGET="{{.CLI_ARGS}}"
         TARGET="${TARGET:-{{.HOSTNAME}}}"
 
-        DIR="$HOME/dotfiles/system/$TARGET"
+        DIR="$HOME/dotfiles/system/darwin/$TARGET"
 
         if [ ! -d "$DIR" ]; then
           echo "Error: System config for \"$TARGET\" not found at $DIR"
           exit 1
         fi
 
-        if [ -n "{{.FIRST_ARG}}" ]; then
-          shift
-        fi
-
-        exec "$DIR/apply.sh" "$@" {{.ARGS}}
+        exec "$HOME/dotfiles/system/darwin/apply.sh" "$TARGET"
 
   apply:update:
     desc: "Update flake.lock and apply"
