@@ -1,0 +1,59 @@
+name: Create Release Pull Request
+
+on:
+  push:
+    branches:
+      - dev
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  create-pr:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Fetch main branch
+        run: git fetch origin main:main
+
+      - name: Set up environment variables
+        env:
+          TZ: "Asia/Tokyo"
+        run: |
+          echo "PR_TITLE=Release $(date '+%Y-%m-%d %H:%M:%S') +09:00" >> $GITHUB_ENV
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          # Get commits since last main merge
+          MAIN_MERGE=$(git log main --pretty=format:"%H" --grep="Merge pull request" | head -1)
+          if [ -z "$MAIN_MERGE" ]; then
+            MAIN_MERGE=$(git log main --pretty=format:"%H" | tail -1)
+          fi
+
+          # Generate changelog
+          CHANGELOG=$(git log ${MAIN_MERGE}..dev --pretty=format:"- %s (%h)")
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create or update pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: release-to-main
+          base: main
+          title: ${{ env.PR_TITLE }}
+          body: |
+            ## Changes
+            ${{ steps.changelog.outputs.changelog }}
+          labels: release
+          draft: false

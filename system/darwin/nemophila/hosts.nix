@@ -8,6 +8,7 @@
   # Home-manager configuration
   home-manager.users.${username} = { config, ... }: {
     home.packages = with pkgs; [
+      mise
     ];
   };
 }
