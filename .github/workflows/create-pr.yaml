@@ -62,5 +62,5 @@ jobs:
               --base main \
               --head dev \
               --title "${{ env.PR_TITLE }}" \
-              --body "## Changes\n${{ steps.changelog.outputs.changelog }}" \
+              --body "## Changes\n${{ steps.changelog.outputs.changelog }}"
           fi
