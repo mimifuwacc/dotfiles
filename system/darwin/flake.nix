@@ -25,6 +25,7 @@
         system = "aarch64-darwin";
         modules = [
           ./_common/darwin.nix
+          ./${hostname}/hosts.nix
           home-manager.darwinModules.home-manager
           {
             networking.hostName = hostname;
@@ -33,13 +34,10 @@
             home-manager.users.${username} = { pkgs, lib, ... }:
               import ./_common/home.nix { inherit pkgs lib username hostname df; };
             home-manager.sharedModules = [
-              ({ config, pkgs, ... }: {
+              {
                 _module.args = {
                   inherit lib username hostname df;
                 };
-                imports = [ ./${hostname}/hosts.nix ];
-              })
-              {
                 nixpkgs.overlays = [
                   (final: prev: {
                     calex-code-jp = prev.callPackage (df "fonts/calex-code-jp/default.nix") { };
