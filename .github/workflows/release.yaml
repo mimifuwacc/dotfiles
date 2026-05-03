@@ -10,14 +10,20 @@ permissions:
   contents: write
   pull-requests: write
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
-  release-pr:
+  create-pr:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v5
         with:
           fetch-depth: 0
+
+      - name: Fetch main branch
+        run: git fetch origin main:main
 
       - name: Set up environment variables
         env:
