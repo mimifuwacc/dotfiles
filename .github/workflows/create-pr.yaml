@@ -5,12 +5,10 @@ on:
     branches:
       - dev
   workflow_dispatch:
-    branches:
-      - dev
 
 permissions:
   contents: write
-  pull-requests: write
+  pull_requests: write
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -24,38 +22,18 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Fetch main branch
-        run: git fetch origin main:main
-
-      - name: Set up environment variables
-        env:
-          TZ: "Asia/Tokyo"
-        run: |
-          echo "PR_TITLE=Release $(date '+%Y-%m-%d %H:%M:%S') +09:00" >> $GITHUB_ENV
-
-      - name: Generate changelog
-        id: changelog
-        run: |
-          # Get commits since last main merge
-          MAIN_MERGE=$(git log main --pretty=format:"%H" --grep="Merge pull request" | head -1)
-          if [ -z "$MAIN_MERGE" ]; then
-            MAIN_MERGE=$(git log main --pretty=format:"%H" | tail -1)
-          fi
-
-          # Generate changelog
-          CHANGELOG=$(git log ${MAIN_MERGE}..dev --pretty=format:"- %s (%h)")
-          echo "changelog<<EOF" >> $GITHUB_OUTPUT
-          echo "$CHANGELOG" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-
-      - name: Create or update pull request
-        uses: peter-evans/create-pull-request@v7
+      - uses: ruby/setup-ruby@v1
         with:
-          branch: release-to-main
-          base: main
-          title: ${{ env.PR_TITLE }}
-          body: |
-            ## Changes
-            ${{ steps.changelog.outputs.changelog }}
-          labels: release
-          draft: false
+          ruby-version: "3.4"
+          bundler-cache: true
+
+      - name: Install git-pr-release
+        run: gem install --no-document git-pr-release
+
+      - name: Create a release pull request
+        run: git-pr-release --squashed
+        env:
+          GIT_PR_RELEASE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GIT_PR_RELEASE_BRANCH_PRODUCTION: main
+          GIT_PR_RELEASE_BRANCH_STAGING: dev
+          GIT_PR_RELEASE_LABELS: release
