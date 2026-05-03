@@ -26,5 +26,11 @@
     cmatrix
   ];
 
-  home.file.".latexmkrc".source = /Users/mimifuwacc/dotfiles/latex/.latexmkrc;
+  home.file.".latexmkrc".source = df /latex/.latexmkrc;
+
+  # VSCode settings
+  home.file."Library/Application Support/Code/User/settings.json" = {
+    source = config.lib.file.mkOutOfStoreSymlink /Users/${username}/dotfiles/vscode/anemone/settings.json;
+    force = true;
+  };
 }
