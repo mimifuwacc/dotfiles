@@ -1,4 +1,4 @@
-name: Create Release Pull Request
+name: Create Pull Request
 
 on:
   push:
@@ -29,7 +29,7 @@ jobs:
         env:
           TZ: "Asia/Tokyo"
         run: |
-          echo "PR_TITLE=Release $(date '+%Y-%m-%d %H:%M:%S') +09:00" >> $GITHUB_ENV
+          echo "PR_TITLE=$(date '+%Y-%m-%d %H:%M:%S') +09:00" >> $GITHUB_ENV
 
       - name: Generate changelog
         id: changelog
@@ -46,14 +46,24 @@ jobs:
           echo "$CHANGELOG" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
-      - name: Create or update pull request
-        uses: peter-evans/create-pull-request@v7
-        with:
-          branch: release-to-main
-          base: main
-          title: ${{ env.PR_TITLE }}
-          body: |
-            ## Changes
-            ${{ steps.changelog.outputs.changelog }}
-          labels: release
-          draft: false
+      - name: Create pull request using gh cli
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Create PR body with proper newlines
+          PR_BODY=$(printf "## Changes\n\n%s" "${{ steps.changelog.outputs.changelog }}")
+
+          # Check if PR already exists
+          PR_NUMBER=$(gh pr list --base main --head dev --json number --jq '.[0].number')
+
+          if [ -n "$PR_NUMBER" ]; then
+            echo "PR already exists: #$PR_NUMBER"
+            gh pr edit "$PR_NUMBER" --title "${{ env.PR_TITLE }}" --body "$PR_BODY"
+          else
+            echo "Creating new PR"
+            gh pr create \
+              --base main \
+              --head dev \
+              --title "${{ env.PR_TITLE }}" \
+              --body "$PR_BODY"
+          fi
