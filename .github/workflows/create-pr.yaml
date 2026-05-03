@@ -1,4 +1,4 @@
-name: Create Release Pull Request
+name: Create Pull Request
 
 on:
   push:
@@ -29,7 +29,7 @@ jobs:
         env:
           TZ: "Asia/Tokyo"
         run: |
-          echo "PR_TITLE=Release $(date '+%Y-%m-%d %H:%M:%S') +09:00" >> $GITHUB_ENV
+          echo "PR_TITLE=$(date '+%Y-%m-%d %H:%M:%S') +09:00" >> $GITHUB_ENV
 
       - name: Generate changelog
         id: changelog
@@ -63,5 +63,4 @@ jobs:
               --head dev \
               --title "${{ env.PR_TITLE }}" \
               --body "## Changes\n${{ steps.changelog.outputs.changelog }}" \
-              --label release
           fi
