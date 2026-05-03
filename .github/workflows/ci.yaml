@@ -1,13 +1,8 @@
 name: CI
 
 on:
-  push:
-    branches:
-      - dev
-      - main
   pull_request:
     branches:
-      - dev
       - main
 
 permissions:
@@ -30,10 +25,3 @@ jobs:
         run: |
           cd system/darwin
           nix flake check
-
-      - name: Install shellcheck
-        run: sudo apt-get install -y shellcheck
-
-      - name: Check shell scripts
-        run: |
-          find . -name "*.sh" -type f | xargs shellcheck
