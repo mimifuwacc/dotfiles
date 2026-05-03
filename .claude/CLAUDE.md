@@ -36,6 +36,11 @@ dotfiles/
 │       │   └── hosts.nix       # nemophila-specific packages/files
 │       ├── flake.nix           # Unified flake for all machines
 │       └── flake.lock
+├── vscode/
+│   ├── anemone/
+│   │   └── settings.json      # VSCode settings for anemone
+│   └── nemophila/
+│       └── settings.json      # VSCode settings for nemophila
 ├── .claude/
 │   ├── CLAUDE.md               # This file
 │   └── rules/                  # Detailed rules by category
@@ -120,6 +125,38 @@ df "path/to/file"  # Resolves from dotfiles root
 - `hosts.nix` for file paths (use absolute paths instead)
 
 See `.claude/rules/files.md` for details.
+
+### Managing VSCode Settings
+
+VSCode settings are managed per-machine using `mkOutOfStoreSymlink`:
+
+1. Create `vscode/<hostname>/settings.json` with your VSCode configuration
+2. Add to `<hostname>/hosts.nix`:
+   ```nix
+   home.file."Library/Application Support/Code/User/settings.json".source =
+     config.lib.file.mkOutOfStoreSymlink /Users/mimifuwacc/dotfiles/vscode/anemone/settings.json;
+   ```
+3. Remove existing settings.json before first apply:
+   ```bash
+   rm ~/Library/Application Support/Code/User/settings.json
+   ```
+4. Run `task apply`
+
+**Benefits**:
+- File stays in dotfiles, not copied to Nix store
+- Edits take effect immediately without rebuilding
+- Changes persist across Nix garbage collection
+
+**Example VSCode settings**:
+```json
+{
+  "latex-workshop.latex.watch.files.ignore": [
+    "**/*.gnuplot",
+    "**/*.gnuplot.tex",
+    "**/gnuplot/**/*.tex"
+  ]
+}
+```
 
 ### Adding a New Machine
 
