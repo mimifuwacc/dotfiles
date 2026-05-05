@@ -31,6 +31,7 @@
             networking.hostName = hostname;
             users.users.${username}.home = "/Users/${username}";
             home-manager.useUserPackages = true;
+            home-manager.backupFileExtension = "backup";
             home-manager.users.${username} = { pkgs, lib, ... }:
               import ./_common/home.nix { inherit pkgs lib username hostname df; };
             home-manager.sharedModules = [
