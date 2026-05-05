@@ -6,12 +6,8 @@ Run the script directly:
 
 ```bash
 # Auto-detect hostname and apply
-~/dotfiles/system/$(hostname -s)/apply.sh
-```
-
-```bash
-# Or specify hostname explicitly
-~/dotfiles/system/<hostname>/apply.sh
+# macOS (Darwin)
+~/dotfiles/system/darwin/apply.sh $(hostname -s | tr '[:upper:]' '[:lower:]')
 ```
 
 ## Usage
