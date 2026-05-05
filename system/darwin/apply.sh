@@ -51,6 +51,10 @@ if ! command -v brew &> /dev/null; then
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 
+if ! command -v darwin-rebuild &> /dev/null; then
+    nix run nix-darwin -- switch --flake "$FLAKE_DIR#$TARGET_HOSTNAME"
+fi
+
 # Update flake.lock if --update flag is set
 if [[ $UPDATE -eq 1 ]]; then
 
