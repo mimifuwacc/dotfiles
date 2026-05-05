@@ -52,7 +52,7 @@ if ! command -v brew &> /dev/null; then
 fi
 
 if ! command -v darwin-rebuild &> /dev/null; then
-    sudo -E nix run nix-darwin -- switch --flake "$FLAKE_DIR#$TARGET_HOSTNAME" --impure
+    sudo --preserve-env=HOME,_USERNAME,_HOSTNAME nix run nix-darwin -- switch --flake "$FLAKE_DIR#$TARGET_HOSTNAME" --impure
 fi
 
 # Update flake.lock if --update flag is set
