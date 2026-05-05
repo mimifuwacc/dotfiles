@@ -21,7 +21,8 @@
           collection-latexrecommended
           collection-mathscience
           collection-pictures
-          latexmk;
+          latexmk
+          latexindent;
       })
       ghostscript
       gnuplot
@@ -34,6 +35,7 @@
     ];
 
     home.file.".latexmkrc".source = df /latex/.latexmkrc;
+    home.file.".config/latexindent/latexindent.yaml".source = df /latex/latexindent.yaml;
 
     # VSCode settings
     home.file."Library/Application Support/Code/User/settings.json" = {
