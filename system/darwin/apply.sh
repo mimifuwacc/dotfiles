@@ -52,12 +52,11 @@ if ! command -v brew &> /dev/null; then
 fi
 
 if ! command -v darwin-rebuild &> /dev/null; then
-    nix run nix-darwin -- switch --flake "$FLAKE_DIR#$TARGET_HOSTNAME"
+    sudo --preserve-env=HOME,_USERNAME,_HOSTNAME nix run nix-darwin -- switch --flake "$FLAKE_DIR#$TARGET_HOSTNAME" --impure
 fi
 
 # Update flake.lock if --update flag is set
 if [[ $UPDATE -eq 1 ]]; then
-
     sudo chown -R "$(whoami):staff" "/Users/$USERNAME/dotfiles/.git"
     sudo chown "$(whoami):staff" "$FLAKE_DIR/flake.lock" 2>/dev/null || true
     nix flake update --flake "$FLAKE_DIR"
