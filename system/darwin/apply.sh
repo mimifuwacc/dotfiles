@@ -37,8 +37,10 @@ fi
 
 # Check required tools
 if ! command -v nix &> /dev/null; then
-    curl -fsSL https://install.determinate.systems/nix | sh -s -- install
+    curl -L https://nixos.org/nix/install | sh -s -- --daemon
     source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+    sudo mkdir -p /etc/nix
+    echo "experimental-features = nix-command flakes" | sudo tee -a /etc/nix/nix.conf
 fi
 
 if ! command -v xcode-select &> /dev/null || ! xcode-select -p &> /dev/null; then
@@ -64,3 +66,6 @@ fi
 
 # Apply configuration
 sudo --preserve-env=HOME,_USERNAME,_HOSTNAME darwin-rebuild switch --flake "$FLAKE_DIR#$TARGET_HOSTNAME" --impure
+
+echo ""
+echo "Done. Run 'exec zsh' to reload your shell."
