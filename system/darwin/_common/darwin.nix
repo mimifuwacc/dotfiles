@@ -4,11 +4,13 @@
     # System-level packages only (not for user commands)
   ];
 
-  nix.enable = false;
+  system.activationScripts.preActivation.text = ''if [ -f /etc/nix/nix.conf ]; then mv /etc/nix/nix.conf /etc/nix/nix.conf.before-nix-darwin || true; fi'';
 
-  nix.settings.gc = {
+  nix.settings.experimental-features = "nix-command flakes";
+
+  nix.gc = {
     automatic = true;
-    interval = [ { Day = 7; } ];
+    interval = { Day = 7; };
     options = "--delete-older-than 30d";
   };
 
@@ -19,6 +21,8 @@
   documentation.enable = false;
 
   nixpkgs.config.allowUnfree = true;
+
+  ids.gids.nixbld = 350;
 
   # Environment variables
   environment.variables = {

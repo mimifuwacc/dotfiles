@@ -19,6 +19,7 @@ in
     # Cli tools
     neovim
     git
+    gh
     fzf
     fastfetch
 

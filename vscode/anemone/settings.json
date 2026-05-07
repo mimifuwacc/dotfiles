@@ -84,15 +84,15 @@
   },
   "latex-workshop.intellisense.package.enabled": true,
   "latex-workshop.formatting.latex": "latexindent",
-  // "latex-workshop.formatting.latexindent.path": "/opt/homebrew/bin/latexindent",
-  // "latex-workshop.formatting.latexindent.args": [
-  //   "-c",
-  //   "%DIR%/",
-  //   "%TMPFILE%",
-  //   "-l",
-  //   "/Users/mimi/.config/latexindent/latexindentrc.yaml",
-  //   "-r"
-  // ],
+  "latex-workshop.formatting.latexindent.path": "/etc/profiles/per-user/mimifuwacc/bin/latexindent",
+  "latex-workshop.formatting.latexindent.args": [
+    "-c",
+    "%DIR%/",
+    "%TMPFILE%",
+    "-l",
+    "/Users/mimifuwacc/.config/latexindent/latexindent.yaml",
+    "-r"
+  ],
   "latex-workshop.latex.recipe.default": "latexmk",
   "latex-workshop.latex.recipes": [
     {
