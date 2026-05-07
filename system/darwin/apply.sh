@@ -59,6 +59,7 @@ fi
 
 # Update flake.lock if --update flag is set
 if [[ $UPDATE -eq 1 ]]; then
+    sudo nix upgrade-nix
     sudo chown -R "$(whoami):staff" "/Users/$USERNAME/dotfiles/.git"
     sudo chown "$(whoami):staff" "$FLAKE_DIR/flake.lock" 2>/dev/null || true
     nix flake update --flake "$FLAKE_DIR"
