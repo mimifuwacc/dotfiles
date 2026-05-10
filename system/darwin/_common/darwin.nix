@@ -133,7 +133,6 @@
       "visual-studio-code"
       "1password"
       "karabiner-elements"
-      # "discord"
       "ghostty"
       "orbstack"
       "google-chrome"
