@@ -195,5 +195,6 @@
   "terminal.integrated.fontFamily": "'Calex Code JP', 'Hack Nerd Font'",
   "markdown-preview-enhanced.previewTheme": "github-dark.css",
   "workbench.secondarySideBar.defaultVisibility": "hidden",
-  "claudeCode.useTerminal": true
+"claudeCode.useTerminal": true,
+"terminal.integrated.mouseWheelScrollSensitivity": 3
 }

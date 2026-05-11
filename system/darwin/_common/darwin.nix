@@ -104,6 +104,19 @@
       NSNavPanelExpandedStateForSaveMode = true;  # Expanded save dialogs
       NSNavPanelExpandedStateForSaveMode2 = true;
     };
+    "com.apple.HIToolbox" = {
+      AppleEnabledInputSources = [
+        {
+          InputSourceKind = "Keyboard Layout";
+          "KeyboardLayout ID" = 252;
+          "KeyboardLayout Name" = "ABC";
+        }
+        {
+          "Bundle ID" = "dev.ensan.inputmethod.azooKeyMac";
+          InputSourceKind = "Non Keyboard Input Method";
+        }
+      ];
+    };
   };
 
   # use brew to install GUI applications
@@ -120,10 +133,10 @@
       "visual-studio-code"
       "1password"
       "karabiner-elements"
-      # "discord"
       "ghostty"
       "orbstack"
       "google-chrome"
+      "azooKey"
     ];
   };
 
