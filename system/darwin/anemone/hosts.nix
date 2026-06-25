@@ -4,6 +4,8 @@
   # Machine-specific homebrew casks
   homebrew.casks = [
     "discord"
+    "1password"
+    "google-chrome"
   ];
 
   # Home-manager configuration
