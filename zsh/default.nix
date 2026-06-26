@@ -1,4 +1,9 @@
 { pkgs, lib, ... }:
+let
+  toolsDir = ./tools;
+  toolFiles = lib.filesystem.listFilesRecursive toolsDir;
+  toolsContent = lib.concatMapStrings builtins.readFile toolFiles;
+in
 {
   programs.zsh = {
     enable = true;
@@ -49,7 +54,7 @@
       _HOSTNAME = "$(hostname -s)";
     };
 
-    initContent = builtins.readFile (./. + "/initContent.zsh");
+    initContent = builtins.readFile ./initContent.zsh + "\n" + toolsContent;
   };
 
   programs.starship = {

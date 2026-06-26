@@ -17,6 +17,7 @@ tasks:
     vars:
       HOSTNAME:
         sh: hostname -s | tr '[:upper:]' '[:lower:]'
+      EXTRA_ARGS: '{{.EXTRA_ARGS | default ""}}'
     cmds:
       - |
         TARGET="{{.CLI_ARGS}}"
@@ -29,14 +30,14 @@ tasks:
           exit 1
         fi
 
-        exec "$HOME/dotfiles/system/darwin/apply.sh" "$TARGET"
+        exec "$HOME/dotfiles/system/darwin/apply.sh" "$TARGET" {{.EXTRA_ARGS}}
 
   apply:update:
     desc: "Update flake.lock and apply"
     silent: true
     cmds:
       - task: apply
-        vars: { ARGS: "--update {{.CLI_ARGS}}" }
+        vars: { EXTRA_ARGS: "--update" }
 
   dev:init:
     desc: "Initialize devbox & direnv"

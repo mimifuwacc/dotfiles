@@ -9,6 +9,14 @@
   home-manager.users.${username} = { config, ... }: {
     home.packages = with pkgs; [
       mise
+      pre-commit
+      _1password-cli
     ];
+
+    programs.zsh = {
+      initContent = ''
+        eval "$(mise activate zsh)"
+      '';
+    };
   };
 }
