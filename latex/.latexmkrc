@@ -1,5 +1,8 @@
 #!/usr/bin/env perl
 
+# Make macOS user/system fonts discoverable by dvipdfmx via kpathsea
+$ENV{OSFONTDIR} = "$ENV{HOME}/Library/Fonts//:/Library/Fonts//:/System/Library/Fonts//";
+
 # PDF generation mode: 1 = use dvipdfmx (standard for Japanese LaTeX)
 $pdf_mode = 1;
 
