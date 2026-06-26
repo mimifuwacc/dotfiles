@@ -7,7 +7,7 @@
   "workbench.activityBar.location": "default",
   "workbench.editor.editorActionsLocation": "titleBar",
   "workbench.editorAssociations": {
-    "*.pdf": "latex-workshop-pdf-hook"
+    "*.pdf": "latex-workshop-pdf-hook",
   },
 
   // auto save
@@ -38,7 +38,7 @@
     "*.sqlite3": "${capture}.${extname}-*",
     "*.db3": "${capture}.${extname}-*",
     "*.sdb": "${capture}.${extname}-*",
-    "*.s3db": "${capture}.${extname}-*"
+    "*.s3db": "${capture}.${extname}-*",
   },
   "window.customTitleBarVisibility": "windowed",
   "prettier.resolveGlobalModules": true,
@@ -51,7 +51,8 @@
   "editor.fontSize": 14,
   "security.workspace.trust.enabled": false,
   "files.associations": {
-    "*.css": "tailwindcss"
+    "*.css": "tailwindcss",
+    "*.md": "markdown",
   },
 
   // copilot
@@ -60,7 +61,7 @@
     "plaintext": false,
     "markdown": false,
     "scminput": false,
-    "*.txt": false
+    "*.txt": false,
     // "*.md": false
   },
   "github.copilot.nextEditSuggestions.enabled": true,
@@ -79,8 +80,8 @@
       "｛": true,
       "｝": true,
       "＜": true,
-      "＞": true
-    }
+      "＞": true,
+    },
   },
   "latex-workshop.intellisense.package.enabled": true,
   "latex-workshop.formatting.latex": "latexindent",
@@ -91,14 +92,14 @@
     "%TMPFILE%",
     "-l",
     "/Users/mimifuwacc/.config/latexindent/latexindent.yaml",
-    "-r"
+    "-r",
   ],
   "latex-workshop.latex.recipe.default": "latexmk",
   "latex-workshop.latex.recipes": [
     {
       "name": "latexmk",
-      "tools": ["latexmk"]
-    }
+      "tools": ["latexmk"],
+    },
   ],
   "latex-workshop.latex.tools": [
     {
@@ -110,14 +111,14 @@
         "--shell-escape",
         "-interaction=nonstopmode",
         "%DOC%",
-        "-f"
-      ]
+        "-f",
+      ],
     },
     {
       "name": "bibtex",
       "command": "bibtex",
-      "args": ["%DOCFILE%"]
-    }
+      "args": ["%DOCFILE%"],
+    },
   ],
   "latex-workshop.view.pdf.viewer": "tab",
   "latex-workshop.latex.watch.files.ignore": [
@@ -125,39 +126,39 @@
     "**/*.gnuplot.tex",
     "**/gnuplot/**/*.tex",
     "**/_minted-*/**",
-    "**/.latex-workspace/**"
+    "**/.latex-workspace/**",
   ],
   "latex-workshop.latex.autoBuild.run": "onSave",
 
   // python
   "[python]": {
     "editor.defaultFormatter": "ms-python.black-formatter",
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
   },
 
   // c/c++
   "[c]": {
     "editor.formatOnSaveMode": "file",
-    "editor.defaultFormatter": "ms-vscode.cpptools"
+    "editor.defaultFormatter": "ms-vscode.cpptools",
   },
   "[cpp]": {
     "editor.formatOnSaveMode": "file",
-    "editor.defaultFormatter": "ms-vscode.cpptools"
+    "editor.defaultFormatter": "ms-vscode.cpptools",
   },
 
   // next.js
   "[prisma]": {
-    "editor.defaultFormatter": "Prisma.prisma"
+    "editor.defaultFormatter": "Prisma.prisma",
   },
 
   "git.autofetch": true,
   "[rust]": {
-    "editor.defaultFormatter": "rust-lang.rust-analyzer"
+    "editor.defaultFormatter": "rust-lang.rust-analyzer",
   },
 
   "redhat.telemetry.enabled": true,
   "accessibility.signals.terminalBell": {
-    "sound": "on"
+    "sound": "on",
   },
   "haskell.manageHLS": "GHCup",
   "biome.suggestInstallingGlobally": false,
@@ -170,7 +171,7 @@
     "editor.rulers": [80],
     "editor.selectionHighlight": false,
     "editor.tabCompletion": "onlySnippets",
-    "editor.wordBasedSuggestions": "off"
+    "editor.wordBasedSuggestions": "off",
   },
 
   "remote.autoForwardPorts": false,
@@ -187,7 +188,7 @@
     "https://www.schemastore.org/": true,
     "https://json.schemastore.org/": true,
     "https://json-schema.org/": true,
-    "https://biomejs.dev": true
+    "https://biomejs.dev": true,
   },
   "claudeCode.preferredLocation": "panel",
   "claudeCode.selectedModel": "opus[1m]",
@@ -195,5 +196,10 @@
   "terminal.integrated.fontFamily": "'Calex Code JP', 'Hack Nerd Font'",
   "markdown-preview-enhanced.previewTheme": "github-dark.css",
   "workbench.secondarySideBar.defaultVisibility": "hidden",
-  "claudeCode.useTerminal": true
+  "claudeCode.useTerminal": true,
+  "terminal.integrated.mouseWheelScrollSensitivity": 3,
+  "diffEditor.ignoreTrimWhitespace": false,
+  "workbench.browser.openLocalhostLinks": false,
+  "workbench.panel.showLabels": false,
+  "workbench.productIconTheme": "material-product-icons",
 }

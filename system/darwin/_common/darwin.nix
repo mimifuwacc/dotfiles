@@ -119,7 +119,6 @@
       "shottr"
       "visual-studio-code"
       "karabiner-elements"
-      # "discord"
       "ghostty"
       "orbstack"
     ];
