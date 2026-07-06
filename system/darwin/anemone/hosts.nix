@@ -11,22 +11,25 @@
 
   # Machine-specific homebrew casks
   homebrew.casks = [
-    "discord"
     "1password"
+    "discord"
     "google-chrome"
-    "zotero"
-    "caffeine"
-    "slidepilot"
+
     "tailscale-app"
     "cloudflare-warp"
 
     "google-chrome"
 
     "font-genjyuugothic"
+
     "microsoft-word"
+    "microsoft-excel"
     "microsoft-powerpoint"
 
     "steam"
+    "prismlauncher"
+    "minecraft"
+    "porting-kit"
 
     # mimifuwacc/homebrew-tap
     "adderall"
@@ -56,8 +59,6 @@
       cmatrix
 
       mise
-      nodejs_24
-      gnumake
     ];
 
     home.file.".latexmkrc".source = df /latex/.latexmkrc;

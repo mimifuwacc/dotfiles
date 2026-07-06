@@ -1,6 +1,6 @@
 {
   // workbench
-  "workbench.colorTheme": "GitHub Dark",
+  "workbench.colorTheme": "Electron Highlighter",
   "workbench.iconTheme": "material-icon-theme",
   "workbench.startupEditor": "none",
   "workbench.editor.enablePreview": false,
@@ -202,4 +202,5 @@
   "workbench.browser.openLocalhostLinks": false,
   "workbench.panel.showLabels": false,
   "workbench.productIconTheme": "material-product-icons",
+  "terminal.integrated.enableMultiLinePasteWarning": "never",
 }

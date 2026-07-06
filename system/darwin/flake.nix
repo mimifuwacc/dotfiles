@@ -47,6 +47,17 @@
                   (final: prev: {
                     calex-code-jp = prev.callPackage (df "fonts/calex-code-jp/default.nix") { };
                   })
+                  # Skip OCI setuid-mode test that fails under the Nix sandbox.
+                  # The sandbox cannot preserve the setuid bit, so the test sees
+                  # 0o755 instead of the expected 0o4755.
+                  # See: https://github.com/jdx/mise/discussions/10617
+                  (final: prev: {
+                    mise = prev.mise.overrideAttrs (old: {
+                      cargoCheckFlags = (old.cargoCheckFlags or [ ]) ++ [
+                        "--skip=oci::layer::tests::preserve_metadata_dir_layer_keeps_special_permission_bits"
+                      ];
+                    });
+                  })
                 ];
               }
             ];

@@ -63,7 +63,8 @@ in
     settings = {
       add_newline = true;
       character = {
-        success_symbol = "[➜](bold green)";
+        success_symbol = "[ヰ](bold #ffffff)";
+        error_symbol = "[ヰ](bold red)";
       };
       package.disabled = true;
     };
