@@ -1,41 +1,44 @@
 # File Management Rules
 
-Rules for handling file paths and the `df` function.
+Rules for writing `home.file` entries.
 
-## DO
+## Preferred: the `storeCopies` / `liveSymlinks` helpers
 
-- **Use absolute paths in `hosts.nix`** - For `home.file`, use paths like `/Users/mimifuwacc/dotfiles/path/to/file`
-- **Use `.text` attribute for simple content** - Instead of sourcing files, use `"file.txt".text = "content"`
-- **Use `df` function in `_common/home.nix`** - It works correctly there for linking dotfiles
-- **Use `mkOutOfStoreSymlink` for frequently edited files** - For files like VSCode settings that you edit often
+`_common/file-helpers.nix` exposes two helpers that take a
+`{ "target" = "repo/path"; ... }` mapping and expand it into `home.file`
+entries. Use them from any home-manager module — both `_common/home.nix` and
+each `<hostname>/hosts.nix`:
+
+```nix
+inherit (import ../_common/file-helpers.nix { inherit lib config username dotfilesPath; })
+  storeCopies liveSymlinks;
+
+home.file =
+  storeCopies {          # copied into the Nix store (needs `task apply` to update)
+    "Taskfile.yaml" = "Taskfile.yaml";
+  }
+  // liveSymlinks {       # live symlink to the repo (edits apply immediately)
+    ".config/ghostty/config" = "ghostty/config";
+  };
+```
+
+- **`storeCopies`** - file is copied into the Nix store: immutable, captured in the generation (rollback-able). For rarely-edited files.
+- **`liveSymlinks`** - `mkOutOfStoreSymlink` straight to the repo file: edits take effect without a rebuild. For frequently-edited config files.
+- **Use `.text` for tiny inline content** - `"file.txt".text = "content"` instead of sourcing a file.
+
+## The `dotfilesPath` function
+
+`dotfilesPath = path: ./../../${path}` (defined in `flake.nix`) resolves a path
+relative to the repo root. The `./../../` is anchored to `flake.nix`'s location
+at parse time, so it resolves the same **from any module**, including
+`hosts.nix` — it does not depend on the caller. `storeCopies` uses it under the
+hood, so you rarely call it directly for `home.file`; it is mainly for
+`imports` (e.g. `dotfilesPath "zsh/default.nix"`).
 
 ## DON'T
 
-- **Don't use `df` function in `hosts.nix`** - Path resolution issues in shared modules context
-- **Don't rely on relative paths in `hosts.nix`** - They won't resolve correctly in Nix store
-
-## WHY
-
-The `df` function (`df = path: ./../../${path}`) works from the flake.nix location, but when passed through home-manager's sharedModules, the relative path context is lost. Use absolute paths or inline content in machine-specific configs.
-
-## EXAMPLE
-
-```nix
-# In hosts.nix - CORRECT for most files
-home.file = {
-  "config.txt".source = /Users/mimifuwacc/dotfiles/config.txt;
-  "inline.txt".text = "Direct content";
-};
-
-# In hosts.nix - CORRECT for frequently edited files (VSCode settings)
-home.file."Library/Application Support/Code/User/settings.json".source =
-  config.lib.file.mkOutOfStoreSymlink /Users/mimifuwacc/dotfiles/vscode/anemone/settings.json;
-
-# In hosts.nix - AVOID
-home.file = {
-  "config.txt".source = df "config.txt";  # Path resolution fails
-};
-```
+- **Don't hand-write repetitive `home.file."x".source = ...`** - Use the helpers above so store-copy vs live-symlink intent stays obvious.
+- **Don't assume paths are caller-relative** - Nix path literals are anchored to the file that contains them, not to where a function is called.
 
 ## VSCode Settings Management
 

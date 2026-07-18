@@ -1,8 +1,9 @@
-{ pkgs, lib, username, df, ... }:
+{ pkgs, lib, config, username, dotfilesPath, ... }:
 
 let
-  # Helper function to create forced dotfile entries
-  mkDotfile = path: { source = df path; force = true; };
+  # Shared home.file helpers, written as { "target" = "repo/path"; ... }.
+  inherit (import ./file-helpers.nix { inherit lib config username dotfilesPath; })
+    storeCopies liveSymlinks;
 in
 {
   home.username = username;
@@ -34,21 +35,26 @@ in
   ];
 
   # dotfiles
-  home.file = {
-    "Taskfile.yaml" = mkDotfile "Taskfile.yaml";
-    ".gitconfig" = mkDotfile "git/darwin.gitconfig";
-    ".config/git/ignore" = mkDotfile "git/darwin.ignore";
-    ".config/nvim/init.lua" = mkDotfile "nvim/init.lua";
-    ".config/nvim/lua" = mkDotfile "nvim/lua";
-    ".config/karabiner/karabiner.json" = mkDotfile "karabiner/karabiner.json";
-    ".config/ghostty/config" = mkDotfile "ghostty/config";
-  };
+  home.file =
+    # Rarely edited: keep reproducible + rollback-able via the Nix store.
+    storeCopies {
+      "Taskfile.yaml" = "Taskfile.yaml";
+      ".gitconfig" = "git/darwin.gitconfig";
+      ".config/git/ignore" = "git/darwin.ignore";
+    }
+    # Frequently edited: live symlink so changes take effect immediately.
+    // liveSymlinks {
+      ".config/nvim/init.lua" = "nvim/init.lua";
+      ".config/nvim/lua" = "nvim/lua";
+      ".config/karabiner/karabiner.json" = "karabiner/karabiner.json";
+      ".config/ghostty/config" = "ghostty/config";
+    };
 
   imports = [
     # Import default packages
-    (df "packages/default.nix")
+    (dotfilesPath "packages/default.nix")
 
     # Import zsh configuration
-    (df "zsh/default.nix")
+    (dotfilesPath "zsh/default.nix")
   ];
 }

@@ -1,4 +1,4 @@
-{ config, pkgs, lib, username, df, nix-latex, ... }:
+{ config, pkgs, lib, username, dotfilesPath, nix-latex, ... }:
 
 {
   # Custom taps for machine-specific casks
@@ -30,6 +30,7 @@
     "prismlauncher"
     "minecraft"
     "porting-kit"
+    "unity"
 
     # mimifuwacc/homebrew-tap
     "adderall"
@@ -48,7 +49,12 @@
   '';
 
   # Home-manager configuration
-  home-manager.users.${username} = { config, ... }: {
+  home-manager.users.${username} = { config, lib, ... }:
+  let
+    inherit (import ../_common/file-helpers.nix { inherit lib config username dotfilesPath; })
+      storeCopies liveSymlinks;
+  in
+  {
     home.packages = with pkgs; [
       nix-latex.packages.${pkgs.system}.default
 
@@ -61,14 +67,14 @@
       mise
     ];
 
-    home.file.".latexmkrc".source = df /latex/.latexmkrc;
-    home.file.".config/latexindent/latexindent.yaml".source = df /latex/latexindent.yaml;
-
-    # VSCode settings
-    home.file."Library/Application Support/Code/User/settings.json" = {
-      source = config.lib.file.mkOutOfStoreSymlink /Users/${username}/dotfiles/vscode/anemone/settings.json;
-      force = true;
-    };
+    home.file =
+      storeCopies {
+        ".latexmkrc" = "latex/.latexmkrc";
+        ".config/latexindent/latexindent.yaml" = "latex/latexindent.yaml";
+      }
+      // liveSymlinks {
+        "Library/Application Support/Code/User/settings.json" = "vscode/anemone/settings.json";
+      };
 
     programs.zsh.initContent = ''
       eval "$(mise activate zsh)"

@@ -23,8 +23,11 @@ if [[ "$CURRENT_HOSTNAME" != "$TARGET_HOSTNAME" ]]; then
 fi
 
 # Set environment variables for nix-darwin
-export _USERNAME=$(whoami)
-export _HOSTNAME="$TARGET_HOSTNAME"
+export DOTFILES_USERNAME=$(whoami)
+export DOTFILES_HOSTNAME="$TARGET_HOSTNAME"
+# Upgrade Homebrew packages only when --update is given (task apply:update).
+# Read as homebrew.onActivation.upgrade in the flake.
+export DOTFILES_UPGRADE="$UPDATE"
 
 USERNAME=$(whoami)
 FLAKE_DIR="/Users/$USERNAME/dotfiles/system/darwin"
@@ -54,7 +57,7 @@ if ! command -v brew &> /dev/null; then
 fi
 
 if ! command -v darwin-rebuild &> /dev/null; then
-    sudo --preserve-env=HOME,_USERNAME,_HOSTNAME nix run nix-darwin -- switch --flake "$FLAKE_DIR#$TARGET_HOSTNAME" --impure
+    sudo --preserve-env=HOME,DOTFILES_USERNAME,DOTFILES_HOSTNAME,DOTFILES_UPGRADE nix run nix-darwin -- switch --flake "$FLAKE_DIR#$TARGET_HOSTNAME" --impure
 fi
 
 # Update flake.lock if --update flag is set
@@ -65,7 +68,7 @@ if [[ $UPDATE -eq 1 ]]; then
 fi
 
 # Apply configuration
-sudo --preserve-env=HOME,_USERNAME,_HOSTNAME darwin-rebuild switch --flake "$FLAKE_DIR#$TARGET_HOSTNAME" --impure
+sudo --preserve-env=HOME,DOTFILES_USERNAME,DOTFILES_HOSTNAME,DOTFILES_UPGRADE darwin-rebuild switch --flake "$FLAKE_DIR#$TARGET_HOSTNAME" --impure
 
 echo ""
 echo "Done. Run 'exec zsh' to reload your shell."

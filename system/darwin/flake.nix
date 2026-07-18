@@ -20,10 +20,10 @@
       lib = nixpkgs.lib;
 
       # Get username from environment variable
-      username = builtins.getEnv "_USERNAME";
+      username = builtins.getEnv "DOTFILES_USERNAME";
 
       # relative path from darwin dir to dotfiles root
-      df = path: ./../../${path};
+      dotfilesPath = path: ./../../${path};
 
       mkDarwinSystem = { hostname, username }: nix-darwin.lib.darwinSystem {
         system = "aarch64-darwin";
@@ -36,16 +36,16 @@
             users.users.${username}.home = "/Users/${username}";
             home-manager.useUserPackages = true;
             home-manager.backupFileExtension = "backup";
-            home-manager.users.${username} = { pkgs, lib, ... }:
-              import ./_common/home.nix { inherit pkgs lib username hostname df; };
+            home-manager.users.${username} = { pkgs, lib, config, ... }:
+              import ./_common/home.nix { inherit pkgs lib config username hostname dotfilesPath; };
             home-manager.sharedModules = [
               {
                 _module.args = {
-                  inherit lib username hostname df;
+                  inherit lib username hostname dotfilesPath;
                 };
                 nixpkgs.overlays = [
                   (final: prev: {
-                    calex-code-jp = prev.callPackage (df "fonts/calex-code-jp/default.nix") { };
+                    calex-code-jp = prev.callPackage (dotfilesPath "fonts/calex-code-jp/default.nix") { };
                   })
                   # Skip OCI setuid-mode test that fails under the Nix sandbox.
                   # The sandbox cannot preserve the setuid bit, so the test sees
@@ -65,7 +65,7 @@
         ];
         specialArgs = {
           inherit (nixpkgs) lib;
-          inherit username hostname df nix-latex;
+          inherit username hostname dotfilesPath nix-latex;
         };
       };
     in {

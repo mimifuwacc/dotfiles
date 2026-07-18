@@ -50,11 +50,11 @@ in
     };
 
     sessionVariables = {
-      _USERNAME = "$(whoami)";
-      _HOSTNAME = "$(hostname -s)";
+      DOTFILES_USERNAME = "$(whoami)";
+      DOTFILES_HOSTNAME = "$(hostname -s)";
     };
 
-    initContent = builtins.readFile ./initContent.zsh + "\n" + toolsContent;
+    initContent = builtins.readFile ./init-content.zsh + "\n" + toolsContent;
   };
 
   programs.starship = {

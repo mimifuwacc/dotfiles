@@ -1,4 +1,4 @@
-{ config, pkgs, lib, username, df, ... }:
+{ config, pkgs, lib, username, dotfilesPath, ... }:
 
 {
   # Machine-specific homebrew casks (add nemophila-specific casks here)

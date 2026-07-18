@@ -110,10 +110,14 @@
   homebrew = {
     enable = true;
     onActivation = {
-    cleanup = "uninstall";
-    autoUpdate = true;
-    upgrade = true;
-  };
+      cleanup = "uninstall";
+      autoUpdate = true;
+
+      # Upgrade casks only on `task apply:update` (apply.sh exports
+      # DOTFILES_UPGRADE=1 when --update is given). Cask upgrades quit
+      # running apps, so a plain `task apply` should not trigger them.
+      upgrade = builtins.getEnv "DOTFILES_UPGRADE" == "1";
+    };
     casks = [
       "raycast"
       "shottr"

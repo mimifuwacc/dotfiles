@@ -35,7 +35,7 @@ This updates `flake.lock` and applies configuration in one step.
 darwin-rebuild build --flake ~/dotfiles/system/darwin#$(hostname -s | tr '[:upper:]' '[:lower:]') --impure
 
 # Apply with explicit environment
-sudo -E _USERNAME=$(whoami) _HOSTNAME=$(hostname -s | tr '[:upper:]' '[:lower:]') \
+sudo -E DOTFILES_USERNAME=$(whoami) DOTFILES_HOSTNAME=$(hostname -s | tr '[:upper:]' '[:lower:]') \
   darwin-rebuild switch --flake ~/dotfiles/system/darwin --impure
 ```
 

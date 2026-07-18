@@ -24,7 +24,7 @@ This means you're on the wrong machine. The configuration is being blocked for y
 ## ENVIRONMENT VARIABLES
 
 The apply script automatically sets and preserves:
-- `_USERNAME` - Current username from `whoami`
-- `_HOSTNAME` - Target hostname in lowercase
+- `DOTFILES_USERNAME` - Current username from `whoami`
+- `DOTFILES_HOSTNAME` - Target hostname in lowercase
 
 These are required for proper Nix flake evaluation.

@@ -51,7 +51,7 @@ dotfiles/
 ### Key Design Principles
 
 1. **Unified Flake**: Single `flake.nix` manages all machines
-2. **Auto-Detection**: Username retrieved from `_USERNAME` environment variable
+2. **Auto-Detection**: Username retrieved from `DOTFILES_USERNAME` environment variable
 3. **Safety**: Hostname validation prevents cross-machine configuration
 4. **Modularity**: Common settings in `_common/`, machine-specific in `<hostname>/`
 
@@ -77,7 +77,7 @@ task dev:init       # Initialize devbox and direnv in current directory
 darwin-rebuild build --flake ~/dotfiles/system/darwin#$(hostname -s | tr '[:upper:]' '[:lower:]') --impure
 
 # Apply with explicit environment
-sudo -E _USERNAME=$(whoami) _HOSTNAME=$(hostname -s | tr '[:upper:]' '[:lower:]') \
+sudo -E DOTFILES_USERNAME=$(whoami) DOTFILES_HOSTNAME=$(hostname -s | tr '[:upper:]' '[:lower:]') \
   darwin-rebuild switch --flake ~/dotfiles/system/darwin --impure
 ```
 
@@ -90,17 +90,17 @@ sudo -E _USERNAME=$(whoami) _HOSTNAME=$(hostname -s | tr '[:upper:]' '[:lower:]'
 Edit `<hostname>/hosts.nix`:
 
 ```nix
-{ config, pkgs, lib, username, df, ... }:
+{ config, pkgs, lib, username, dotfilesPath, ... }:
 {
   home.packages = with pkgs; [
     # Machine-specific packages
   ];
 
   home.file = {
-    # Use absolute paths for reliability
-    "config.txt".source = /Users/mimifuwacc/dotfiles/config.txt;
-    "inline.txt".text = "Direct content";
+    "inline.txt".text = "Direct content";  # tiny inline content
   };
+  # For repo files, use the storeCopies / liveSymlinks helpers from
+  # _common/file-helpers.nix (see .claude/rules/files.md).
 }
 ```
 
@@ -111,18 +111,16 @@ Edit `<hostname>/hosts.nix`:
 
 > **Warning**: Changes to `_common/` affect all machines. Run `task apply` on each machine after modifying.
 
-### The `df` Function
+### The `dotfilesPath` Function
 
 ```nix
-df "path/to/file"  # Resolves from dotfiles root
+dotfilesPath "path/to/file"  # Resolves from the dotfiles repo root
 ```
 
-**Works in**:
-- `_common/home.nix` for linking dotfiles
-- `_common/darwin.nix` for system configs
-
-**Avoid in**:
-- `hosts.nix` for file paths (use absolute paths instead)
+`./../../` is anchored to `flake.nix`, so it resolves the same **from any
+module**, including `hosts.nix` — it does not depend on the caller. For
+`home.file` entries, prefer the `storeCopies` / `liveSymlinks` helpers (they use
+`dotfilesPath` internally); call it directly mainly for `imports`.
 
 See `.claude/rules/files.md` for details.
 
@@ -175,10 +173,10 @@ VSCode settings are managed per-machine using `mkOutOfStoreSymlink`:
 
 The apply script automatically sets:
 
-- `_USERNAME` - Current username (from `whoami`)
-- `_HOSTNAME` - Target hostname in lowercase
+- `DOTFILES_USERNAME` - Current username (from `whoami`)
+- `DOTFILES_HOSTNAME` - Target hostname in lowercase
 
-Preserved through sudo: `sudo --preserve-env=HOME,_USERNAME,_HOSTNAME`
+Preserved through sudo: `sudo --preserve-env=HOME,DOTFILES_USERNAME,DOTFILES_HOSTNAME`
 
 ## Troubleshooting
 
@@ -191,7 +189,7 @@ hostname -s | tr '[:upper:]' '[:lower:]'
 
 **Verify environment variables:**
 ```bash
-echo $_USERNAME $_HOSTNAME
+echo $DOTFILES_USERNAME $DOTFILES_HOSTNAME
 ```
 
 **Update flake.lock:**
@@ -209,7 +207,7 @@ Error: This configuration is for 'anemone', but current hostname is 'nemophila'
 
 ### Path Resolution Issues
 
-See `.claude/rules/files.md` for `df` function limitations and solutions.
+See `.claude/rules/files.md` for `dotfilesPath` function limitations and solutions.
 
 ## Shell & Tools
 
@@ -223,7 +221,7 @@ Configuration linked from repository via home-manager.
 ## Related Documentation
 
 - `.claude/rules/configuration.md` - Configuration management rules
-- `.claude/rules/files.md` - File path and `df` function rules
+- `.claude/rules/files.md` - File path and `dotfilesPath` function rules
 - `.claude/rules/security.md` - Hostname validation and safety
 - `.claude/rules/testing.md` - Testing and application procedures
 - `.claude/rules/workflow.md` - Development workflow and code style
