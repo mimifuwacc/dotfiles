@@ -38,7 +38,7 @@ in
   home.file =
     # Rarely edited: keep reproducible + rollback-able via the Nix store.
     storeCopies {
-      "Taskfile.yaml" = "Taskfile.yaml";
+      "Taskfile.yaml" = "go-task/Taskfile.yaml";
       ".gitconfig" = "git/darwin.gitconfig";
       ".config/git/ignore" = "git/darwin.ignore";
     }

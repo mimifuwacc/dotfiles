@@ -2,11 +2,15 @@ version: "3"
 
 tasks:
   default:
+    cmds:
+      - task edit
+
+  tasks:
     desc: "Show task list"
     cmds:
       - task --list
 
-  open:dotfiles:
+  edit:
     desc: "Open dotfiles in editor"
     cmds:
       - code ~/dotfiles
@@ -38,11 +42,3 @@ tasks:
     cmds:
       - task: apply
         vars: { EXTRA_ARGS: "--update" }
-
-  dev:init:
-    desc: "Initialize devbox & direnv"
-    dir: "{{.USER_WORKING_DIR}}"
-    silent: true
-    cmds:
-      - devbox init
-      - devbox generate direnv -q

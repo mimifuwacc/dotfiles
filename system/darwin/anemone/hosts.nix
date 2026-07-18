@@ -30,7 +30,7 @@
     "prismlauncher"
     "minecraft"
     "porting-kit"
-    "unity"
+    "unity-hub"
 
     # mimifuwacc/homebrew-tap
     "adderall"
@@ -56,7 +56,7 @@
   in
   {
     home.packages = with pkgs; [
-      nix-latex.packages.${pkgs.system}.default
+      nix-latex.packages.${pkgs.stdenv.hostPlatform.system}.default
 
       # Joke tools
       gti

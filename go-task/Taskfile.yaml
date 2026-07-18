@@ -1,0 +1,9 @@
+# Global Taskfile, deployed to ~/Taskfile.yaml (see _common/home.nix).
+# Exposes the repo's tasks under the `root:` namespace, e.g. `task root:apply`
+# from $HOME. The relative include resolves against ~/ once deployed there,
+# so `./dotfiles/Taskfile.yaml` points at ~/dotfiles/Taskfile.yaml.
+version: "3"
+
+includes:
+  root:
+    taskfile: ./dotfiles/Taskfile.yaml
