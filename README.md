@@ -2,9 +2,9 @@
 
 ## Initial Setup
 
-Run the script directly:
+```sh
+git clone github.com:mimifuwacc/dotfiles
 
-```bash
 # Auto-detect hostname and apply
 # macOS (Darwin)
 ~/dotfiles/system/darwin/apply.sh $(hostname -s | tr '[:upper:]' '[:lower:]')
@@ -12,17 +12,9 @@ Run the script directly:
 
 ## Usage
 
-```bash
-# Apply configuration (auto-detects hostname)
-task apply
-```
-
-```bash
-# Apply for specific hostname
-task apply <hostname>
-```
-
-```bash
-# Update flake.lock and apply
-task apply:update
+```sh
+dotfiles                  # edit dotfiles (VSCode is default editor)
+dotfiles edit             # same as no agrs
+dotfiles apply            # Apply configuration (auto-detects hostname)
+dotfiles apply:update     # Update flake.lock, brew packages and apply
 ```
