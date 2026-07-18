@@ -1,5 +1,7 @@
 version: "3"
 
+silent: true
+
 tasks:
   default:
     cmds:
@@ -17,7 +19,6 @@ tasks:
 
   apply:
     desc: "Apply Nix configuration"
-    silent: true
     vars:
       HOSTNAME:
         sh: hostname -s | tr '[:upper:]' '[:lower:]'
@@ -38,7 +39,6 @@ tasks:
 
   apply:update:
     desc: "Update flake.lock and apply"
-    silent: true
     cmds:
       - task: apply
         vars: { EXTRA_ARGS: "--update" }
