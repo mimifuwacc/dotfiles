@@ -32,10 +32,17 @@ ADVANCE = 600
 
 # Width the artwork is drawn at, in font units. Deliberately wider than the
 # advance: a square glyph confined to a 0.6em cell tops out well below the
-# capital height of the text beside it (measured against Calex Code JP at 0.693em),
-# which reads as a shrunken icon. Overflowing the cell costs nothing here because
-# the prompt symbol is always followed by a space.
-ART = 800
+# capital height of the text beside it (Calex Code JP sits at 0.693em), which
+# reads as a shrunken icon. Overflowing costs nothing because the prompt symbol
+# is always followed by a space -- but only rightwards, hence ART_ORIGIN below.
+# Past roughly this size the glyph starts crowding the text after the space.
+ART = 950
+
+# Left edge of the artwork within the advance. Zero rather than centred: xterm.js
+# (VSCode's terminal) clips whatever spills past the cell's left edge, so a
+# centred glyph loses its left side as it grows. Anchoring left sends the entire
+# overflow into the trailing space instead.
+ART_ORIGIN = 0
 
 # Pixels-per-em values to bake bitmaps for. A renderer picks the nearest strike
 # and scales when it has to, and that scaling is the only thing that softens a
@@ -112,8 +119,7 @@ def draw_cells(image, keep):
     glyph header, so a mismatch shifts where the glyph is thought to begin.
     """
     cell = ART / image.width
-    # Centre the artwork in the advance and sit it on the baseline.
-    x_origin = (ADVANCE - ART) / 2
+    x_origin = ART_ORIGIN
     y_origin = cell * image.height
 
     pen = TTGlyphPen(None)
@@ -159,7 +165,7 @@ def bitmap(image, ppem):
     """
     left, top, right, bottom = image.getchannel("A").getbbox()
     cell = ART / image.width
-    x_origin = (ADVANCE - ART) / 2
+    x_origin = ART_ORIGIN
     y_origin = cell * image.height
 
     # The same rounding draw_cells applies, so the two agree exactly.
