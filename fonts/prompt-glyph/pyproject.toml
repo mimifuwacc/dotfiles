@@ -8,6 +8,11 @@ dependencies = [
     "pillow>=11.0",
 ]
 
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+]
+
 [tool.uv]
 # Just a dependency set for build-font.py; nothing here is importable.
 package = false

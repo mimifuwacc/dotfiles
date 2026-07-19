@@ -25,3 +25,19 @@ jobs:
         run: |
           cd system/darwin
           nix flake check
+
+  prompt-glyph:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Test the prompt glyph font build
+        working-directory: fonts/prompt-glyph
+        run: uv run --frozen pytest -q

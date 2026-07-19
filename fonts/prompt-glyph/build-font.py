@@ -12,13 +12,14 @@ everything else. Outlines are TrueType because sbix pairs with glyf.
 """
 
 import io
+import os
 import sys
 from pathlib import Path
 
 from fontTools.colorLib.builder import buildCOLR, buildCPAL
 from fontTools.fontBuilder import FontBuilder
 from fontTools.pens.ttGlyphPen import TTGlyphPen
-from fontTools.ttLib import newTable
+from fontTools.ttLib import TTFont, newTable
 from fontTools.ttLib.tables.sbixGlyph import Glyph as SbixGlyph
 from fontTools.ttLib.tables.sbixStrike import Strike as SbixStrike
 from PIL import Image
@@ -32,7 +33,7 @@ ADVANCE = 600
 
 # Width the artwork is drawn at, in font units. Far wider than the advance: a
 # square glyph confined to a 0.6em cell renders much smaller than the text beside
-# it. These two values were solved for by rendering against the terminal's block
+# it. This and ART_DROP were solved for by rendering against the terminal's block
 # cursor, which occupies exactly one cell, until the glyph matched its box.
 # Overflowing the advance costs nothing because the prompt symbol is always
 # followed by a space -- but only rightwards, hence ART_ORIGIN below.
@@ -74,6 +75,32 @@ GLYPHS = [
 ]
 
 
+class Layout:
+    """Maps artwork pixel coordinates onto font units.
+
+    The outline and the sbix bitmaps have to land on exactly the same box: a
+    renderer sizes its canvas from the outline's bounds and then lets the bitmap
+    draw, so a bitmap even slightly larger gets clipped. Both go through this
+    one mapping, including its rounding, so they cannot drift apart.
+    """
+
+    def __init__(self, image):
+        self.cell = ART / image.width
+        self.top = self.cell * image.height - ART_DROP
+
+    def x(self, col):
+        return round(ART_ORIGIN + col * self.cell)
+
+    def y(self, row):
+        """Font-unit y of a row's top edge; row 0 is the artwork's top."""
+        return round(self.top - row * self.cell)
+
+
+def ink_box(image):
+    """Bounding box of everything that is not canvas."""
+    return image.getchannel("A").getbbox()
+
+
 def read_image(path):
     """Return the artwork as RGBA with the canvas made transparent.
 
@@ -108,13 +135,6 @@ def read_image(path):
     return image
 
 
-def rows_of(image):
-    return [
-        [image.getpixel((x, y)) for x in range(image.width)]
-        for y in range(image.height)
-    ]
-
-
 def draw_cells(image, keep):
     """Draw pixels matching `keep` as rectangles, returning (glyph, left bearing).
 
@@ -124,29 +144,25 @@ def draw_cells(image, keep):
     The bearing must be the outline's own xMin. CoreText believes hmtx over the
     glyph header, so a mismatch shifts where the glyph is thought to begin.
     """
-    cell = ART / image.width
-    x_origin = ART_ORIGIN
-    y_origin = cell * image.height - ART_DROP
-
+    layout = Layout(image)
+    rows = image.load()
     pen = TTGlyphPen(None)
     lsb = None
 
-    for r, row in enumerate(rows_of(image)):
+    for r in range(image.height):
         col = 0
         while col < image.width:
-            if not keep(row[col]):
+            if not keep(rows[col, r]):
                 col += 1
                 continue
 
             start = col
-            while col < image.width and keep(row[col]):
+            while col < image.width and keep(rows[col, r]):
                 col += 1
 
-            x0 = round(x_origin + start * cell)
-            x1 = round(x_origin + col * cell)
-            # Row 0 is the top row, and font coordinates grow upwards.
-            y1 = round(y_origin - r * cell)
-            y0 = round(y_origin - (r + 1) * cell)
+            x0, x1 = layout.x(start), layout.x(col)
+            # Font coordinates grow upwards, so the row below is the lower edge.
+            y1, y0 = layout.y(r), layout.y(r + 1)
 
             pen.moveTo((x0, y0))
             pen.lineTo((x1, y0))
@@ -162,21 +178,14 @@ def draw_cells(image, keep):
 def bitmap(image, ppem):
     """Return the PNG for one sbix strike, cropped to the inked area.
 
-    The bitmap must cover the same box as the outline: a renderer sizes its
-    canvas from the outline's bounds, so transparent margin lands outside and is
-    clipped. Its size therefore comes from those bounds too, not from the
-    artwork's own resolution. Cropping is also why the strike's origin offsets
-    stay zero -- the left side bearing already moves the pen to that box, and an
-    offset here would be counted twice.
+    Cropping is why the strike's origin offsets stay zero: the left side bearing
+    already moves the pen to the outline's box, and an offset here would be
+    counted a second time.
     """
-    left, top, right, bottom = image.getchannel("A").getbbox()
-    cell = ART / image.width
-    x_origin = ART_ORIGIN
-    y_origin = cell * image.height - ART_DROP
-
-    # The same rounding draw_cells applies, so the two agree exactly.
-    units_w = round(x_origin + right * cell) - round(x_origin + left * cell)
-    units_h = round(y_origin - top * cell) - round(y_origin - bottom * cell)
+    left, top, right, bottom = ink_box(image)
+    layout = Layout(image)
+    units_w = layout.x(right) - layout.x(left)
+    units_h = layout.y(top) - layout.y(bottom)
 
     cropped = image.crop((left, top, right, bottom)).resize(
         (
@@ -191,13 +200,8 @@ def bitmap(image, ppem):
     return buffer.getvalue()
 
 
-def main():
-    if len(sys.argv) != 3:
-        sys.exit("usage: build-font.py SRC_DIR OUTPUT_TTF")
-
-    src = Path(sys.argv[1])
-    out = Path(sys.argv[2])
-
+def load_artwork(src):
+    """Read every glyph's artwork, checking they can share one set of metrics."""
     images = {name: read_image(src / image) for name, _, image in GLYPHS}
 
     # One size keeps a single advance and set of strikes valid for every glyph.
@@ -205,14 +209,23 @@ def main():
     if len(sizes) != 1:
         sys.exit(f"images disagree on size: {sorted(sizes)}")
 
-    # One CPAL palette shared by every glyph, ordered by first appearance so it
-    # stays stable across rebuilds.
+    return images
+
+
+def build_palette(images):
+    """Every ink colour, ordered by first appearance so rebuilds stay stable."""
     palette = []
+    seen = set()
     for image in images.values():
         for px in image.getdata():
-            if px[3] > ALPHA_FLOOR and px not in palette:
+            if px[3] > ALPHA_FLOOR and px not in seen:
+                seen.add(px)
                 palette.append(px)
+    return palette
 
+
+def build_glyphs(images, palette):
+    """Build the outlines: one base glyph per symbol plus a COLR layer per colour."""
     # .notdef is blank: the font is only reached through an explicit codepoint
     # mapping, so there is nothing to fall back to.
     glyf = {".notdef": TTGlyphPen(None).glyph()}
@@ -227,10 +240,11 @@ def main():
         metrics[name] = (ADVANCE, lsb)
         order.append(name)
 
-        used = [c for c in palette if c in set(image.getdata())]
+        present = set(image.getdata())
         glyph_layers = []
-        for color in used:
-            index = palette.index(color)
+        for index, color in enumerate(palette):
+            if color not in present:
+                continue
             layer = f"{name}.{index}"
             glyf[layer], layer_lsb = draw_cells(
                 image, lambda px, color=color: px == color
@@ -240,6 +254,49 @@ def main():
             glyph_layers.append((layer, index))
 
         layers[name] = glyph_layers
+
+    return glyf, metrics, order, layers
+
+
+def build_sbix(images):
+    """Colour bitmaps, one strike per pixels-per-em value."""
+    sbix = newTable("sbix")
+    sbix.version = 1
+    sbix.flags = 1
+    sbix.strikes = {}
+
+    for ppem in STRIKE_PPEMS:
+        strike = SbixStrike()
+        strike.ppem = ppem
+        strike.resolution = 72
+        strike.glyphs = {
+            name: SbixGlyph(
+                glyphName=name,
+                graphicType="png ",
+                imageData=bitmap(image, ppem),
+                originOffsetX=0,
+                originOffsetY=0,
+            )
+            for name, image in images.items()
+        }
+        sbix.strikes[ppem] = strike
+
+    sbix.numStrikes = len(sbix.strikes)
+    return sbix
+
+
+def build_font(images):
+    """Assemble the complete font from the artwork."""
+    # fontTools stamps head.created/modified from SOURCE_DATE_EPOCH, falling back
+    # to the clock. Pinning it keeps identical artwork producing identical bytes,
+    # and stops a malformed value in the environment from failing the build --
+    # a real hazard, since some shells export it empty. A valid value is left
+    # alone so the Nix sandbox keeps control of it.
+    if not os.environ.get("SOURCE_DATE_EPOCH", "").isdigit():
+        os.environ["SOURCE_DATE_EPOCH"] = "0"
+
+    palette = build_palette(images)
+    glyf, metrics, order, layers = build_glyphs(images, palette)
 
     fb = FontBuilder(UPM, isTTF=True)
     fb.setupGlyphOrder(order)
@@ -269,30 +326,20 @@ def main():
     # COLR v0: flat pixel art has no use for the gradients v1 adds.
     fb.font["CPAL"] = buildCPAL([[tuple(c / 255 for c in color) for color in palette]])
     fb.font["COLR"] = buildCOLR(layers, version=0)
+    fb.font["sbix"] = build_sbix(images)
 
-    sbix = newTable("sbix")
-    sbix.version = 1
-    sbix.flags = 1
-    sbix.strikes = {}
-    for ppem in STRIKE_PPEMS:
-        strike = SbixStrike()
-        strike.ppem = ppem
-        strike.resolution = 72
-        strike.glyphs = {}
-        for name, image in images.items():
-            strike.glyphs[name] = SbixGlyph(
-                glyphName=name,
-                graphicType="png ",
-                imageData=bitmap(image, ppem),
-                originOffsetX=0,
-                originOffsetY=0,
-            )
-        sbix.strikes[ppem] = strike
-    sbix.numStrikes = len(sbix.strikes)
-    fb.font["sbix"] = sbix
+    return fb.font
+
+
+def main():
+    if len(sys.argv) != 3:
+        sys.exit("usage: build-font.py SRC_DIR OUTPUT_TTF")
+
+    src, out = Path(sys.argv[1]), Path(sys.argv[2])
+    font = build_font(load_artwork(src))
 
     out.parent.mkdir(parents=True, exist_ok=True)
-    fb.save(str(out))
+    font.save(str(out))
 
 
 if __name__ == "__main__":
