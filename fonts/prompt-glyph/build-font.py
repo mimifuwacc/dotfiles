@@ -30,14 +30,17 @@ DESCENT = -200
 # 0.6em, the usual monospace advance, so a glyph occupies one cell.
 ADVANCE = 600
 
-# Width the artwork is drawn at, in font units. At font-size 20 on a 2x display
-# a cell is 24 device pixels, so 400 puts a 16px artwork on 16 of them: one dot
-# per pixel, no resampling, and room left beside the glyph.
-ART = 400
+# Width the artwork is drawn at, in font units. Filling the advance is the
+# largest a glyph can be while its dots stay square, since the cell is only
+# 0.6em wide.
+ART = ADVANCE
 
-# Bitmaps are baked at whole multiples of the artwork so no strike is a blurry
-# half-pixel resample.
-STRIKE_SCALES = (1, 2, 3, 4)
+# Pixels-per-em values to bake bitmaps for. A renderer picks the nearest strike
+# and scales when it has to, and that scaling is the only thing that softens a
+# bitmap glyph -- an exact strike is pixel for pixel whatever the artwork
+# resolution happens to be. ppem is font-size times display scale, so this
+# covers roughly font-size 8 to 32 on a 2x display, plus a few larger.
+STRIKE_PPEMS = tuple(range(16, 65, 2)) + (72, 80, 96, 112, 128, 160)
 
 # Alpha at or below this counts as canvas rather than ink.
 ALPHA_FLOOR = 0
@@ -142,23 +145,31 @@ def draw_cells(image, keep):
     return pen.glyph(), lsb or 0
 
 
-def strike_ppem(art_width, scale):
-    """The ppem at which the artwork lands on exactly `scale` pixels per dot."""
-    return round(scale * art_width * UPM / ART)
-
-
-def bitmap(image, scale):
+def bitmap(image, ppem):
     """Return the PNG for one sbix strike, cropped to the inked area.
 
     The bitmap must cover the same box as the outline: a renderer sizes its
     canvas from the outline's bounds, so transparent margin lands outside and is
-    clipped. Cropping is also why the strike's origin offsets stay zero -- the
-    left side bearing already moves the pen to that box, and an offset here
-    would be counted twice.
+    clipped. Its size therefore comes from those bounds too, not from the
+    artwork's own resolution. Cropping is also why the strike's origin offsets
+    stay zero -- the left side bearing already moves the pen to that box, and an
+    offset here would be counted twice.
     """
-    cropped = image.crop(image.getchannel("A").getbbox())
-    cropped = cropped.resize(
-        (cropped.width * scale, cropped.height * scale), Image.NEAREST
+    left, top, right, bottom = image.getchannel("A").getbbox()
+    cell = ART / image.width
+    x_origin = (ADVANCE - ART) / 2
+    y_origin = cell * image.height
+
+    # The same rounding draw_cells applies, so the two agree exactly.
+    units_w = round(x_origin + right * cell) - round(x_origin + left * cell)
+    units_h = round(y_origin - top * cell) - round(y_origin - bottom * cell)
+
+    cropped = image.crop((left, top, right, bottom)).resize(
+        (
+            max(1, round(units_w * ppem / UPM)),
+            max(1, round(units_h * ppem / UPM)),
+        ),
+        Image.NEAREST,
     )
 
     buffer = io.BytesIO()
@@ -179,7 +190,6 @@ def main():
     sizes = {im.size for im in images.values()}
     if len(sizes) != 1:
         sys.exit(f"images disagree on size: {sorted(sizes)}")
-    art_width = sizes.pop()[0]
 
     # One CPAL palette shared by every glyph, ordered by first appearance so it
     # stays stable across rebuilds.
@@ -250,20 +260,20 @@ def main():
     sbix.version = 1
     sbix.flags = 1
     sbix.strikes = {}
-    for scale in STRIKE_SCALES:
+    for ppem in STRIKE_PPEMS:
         strike = SbixStrike()
-        strike.ppem = strike_ppem(art_width, scale)
+        strike.ppem = ppem
         strike.resolution = 72
         strike.glyphs = {}
         for name, image in images.items():
             strike.glyphs[name] = SbixGlyph(
                 glyphName=name,
                 graphicType="png ",
-                imageData=bitmap(image, scale),
+                imageData=bitmap(image, ppem),
                 originOffsetX=0,
                 originOffsetY=0,
             )
-        sbix.strikes[strike.ppem] = strike
+        sbix.strikes[ppem] = strike
     sbix.numStrikes = len(sbix.strikes)
     fb.font["sbix"] = sbix
 
