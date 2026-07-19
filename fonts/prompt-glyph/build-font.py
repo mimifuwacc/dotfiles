@@ -30,10 +30,12 @@ DESCENT = -200
 # 0.6em, the usual monospace advance, so a glyph occupies one cell.
 ADVANCE = 600
 
-# Width the artwork is drawn at, in font units. Filling the advance is the
-# largest a glyph can be while its dots stay square, since the cell is only
-# 0.6em wide.
-ART = ADVANCE
+# Width the artwork is drawn at, in font units. Deliberately wider than the
+# advance: a square glyph confined to a 0.6em cell tops out well below the
+# capital height of the text beside it (measured against Calex Code JP at 0.693em),
+# which reads as a shrunken icon. Overflowing the cell costs nothing here because
+# the prompt symbol is always followed by a space.
+ART = 800
 
 # Pixels-per-em values to bake bitmaps for. A renderer picks the nearest strike
 # and scales when it has to, and that scaling is the only thing that softens a
