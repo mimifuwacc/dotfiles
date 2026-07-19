@@ -148,11 +148,8 @@ VSCode settings are managed per-machine using `mkOutOfStoreSymlink`:
 **Example VSCode settings**:
 ```json
 {
-  "latex-workshop.latex.watch.files.ignore": [
-    "**/*.gnuplot",
-    "**/*.gnuplot.tex",
-    "**/gnuplot/**/*.tex"
-  ]
+  "editor.tabSize": 2,
+  "editor.formatOnSave": true
 }
 ```
 

@@ -6,10 +6,6 @@
   "workbench.editor.enablePreview": false,
   "workbench.activityBar.location": "default",
   "workbench.editor.editorActionsLocation": "titleBar",
-  "workbench.editorAssociations": {
-    "*.pdf": "latex-workshop-pdf-hook",
-  },
-
   // auto save
   "files.autoSave": "afterDelay",
   "editor.formatOnPaste": true,
@@ -65,70 +61,6 @@
     // "*.md": false
   },
   "github.copilot.nextEditSuggestions.enabled": true,
-
-  // latex
-  "[latex]": {
-    "editor.formatOnSave": true,
-    "editor.defaultFormatter": "James-Yu.latex-workshop",
-    "editor.unicodeHighlight.allowedCharacters": {
-      "，": true,
-      "．": true,
-      "！": true,
-      "？": true,
-      "［": true,
-      "］": true,
-      "｛": true,
-      "｝": true,
-      "＜": true,
-      "＞": true,
-    },
-  },
-  "latex-workshop.intellisense.package.enabled": true,
-  "latex-workshop.formatting.latex": "latexindent",
-  "latex-workshop.formatting.latexindent.path": "/etc/profiles/per-user/mimifuwacc/bin/latexindent",
-  "latex-workshop.formatting.latexindent.args": [
-    "-c",
-    "%DIR%/",
-    "%TMPFILE%",
-    "-l",
-    "/Users/mimifuwacc/.config/latexindent/latexindent.yaml",
-    "-r",
-  ],
-  "latex-workshop.latex.recipe.default": "latexmk",
-  "latex-workshop.latex.recipes": [
-    {
-      "name": "latexmk",
-      "tools": ["latexmk"],
-    },
-  ],
-  "latex-workshop.latex.tools": [
-    {
-      "name": "latexmk",
-      "command": "latexmk",
-      "args": [
-        "-pdfdvi",
-        "-synctex=1",
-        "--shell-escape",
-        "-interaction=nonstopmode",
-        "%DOC%",
-        "-f",
-      ],
-    },
-    {
-      "name": "bibtex",
-      "command": "bibtex",
-      "args": ["%DOCFILE%"],
-    },
-  ],
-  "latex-workshop.view.pdf.viewer": "tab",
-  "latex-workshop.latex.watch.files.ignore": [
-    "**/*.gnuplot",
-    "**/*.gnuplot.tex",
-    "**/gnuplot/**/*.tex",
-    "**/_minted-*/**",
-    "**/.latex-workspace/**",
-  ],
-  "latex-workshop.latex.autoBuild.run": "onSave",
 
   // python
   "[python]": {

@@ -10,12 +10,8 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nix-latex = {
-      url = "github:mimifuwacc/nix-latex";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
-  outputs = { self, nixpkgs, nix-darwin, home-manager, nix-latex }:
+  outputs = { self, nixpkgs, nix-darwin, home-manager }:
     let
       lib = nixpkgs.lib;
 
@@ -65,7 +61,7 @@
         ];
         specialArgs = {
           inherit (nixpkgs) lib;
-          inherit username hostname dotfilesPath nix-latex;
+          inherit username hostname dotfilesPath;
         };
       };
     in {

@@ -1,4 +1,4 @@
-{ config, pkgs, lib, username, dotfilesPath, nix-latex, ... }:
+{ config, pkgs, lib, username, dotfilesPath, ... }:
 
 {
   # Custom taps for machine-specific casks
@@ -52,12 +52,10 @@
   home-manager.users.${username} = { config, lib, ... }:
   let
     inherit (import ../_common/file-helpers.nix { inherit lib config username dotfilesPath; })
-      storeCopies liveSymlinks;
+      liveSymlinks;
   in
   {
     home.packages = with pkgs; [
-      nix-latex.packages.${pkgs.stdenv.hostPlatform.system}.default
-
       # Joke tools
       gti
       sl
@@ -67,14 +65,9 @@
       mise
     ];
 
-    home.file =
-      storeCopies {
-        ".latexmkrc" = "latex/.latexmkrc";
-        ".config/latexindent/latexindent.yaml" = "latex/latexindent.yaml";
-      }
-      // liveSymlinks {
-        "Library/Application Support/Code/User/settings.json" = "vscode/anemone/settings.json";
-      };
+    home.file = liveSymlinks {
+      "Library/Application Support/Code/User/settings.json" = "vscode/anemone/settings.json";
+    };
 
     programs.zsh.initContent = ''
       eval "$(mise activate zsh)"
