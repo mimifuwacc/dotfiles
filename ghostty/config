@@ -1,4 +1,16 @@
 macos-titlebar-style = tabs
 background-opacity = 0.8
 theme = Electron Highlighter
-font-size=20.0
+font-size = 20.0
+window-padding-x = 10
+window-padding-balance = true
+
+# Route just the Starship prompt glyphs to the tiny font built by
+# fonts/prompt-glyph. Mapping the codepoints instead of adding a `font-family`
+# fallback keeps the primary font untouched -- naming a font here would
+# otherwise make it the primary one, since no `font-family` is set.
+#
+# Plane 16 rather than the usual U+E000 area: Ghostty treats U+E000-U+E00A as
+# Nerd Font icons and squashes them to 79% of the cell height, which distorts
+# the artwork. Its icon table ends at U+F1AF0, so nothing here can collide.
+font-codepoint-map = U+100000-U+100001=Prompt Glyphs

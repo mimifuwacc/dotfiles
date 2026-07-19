@@ -27,6 +27,7 @@ in
     # Fonts
     calex-code-jp
     nerd-fonts.hack
+    prompt-glyph
 
     # Dev tools
     uv

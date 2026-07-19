@@ -1,0 +1,13 @@
+[project]
+name = "prompt-glyph"
+version = "1.0.0"
+description = "Builds the Starship prompt glyph font (U+E000 / U+E001) from SVG"
+requires-python = ">=3.9"
+dependencies = [
+    "fonttools>=4.60",
+    "pillow>=11.0",
+]
+
+[tool.uv]
+# Just a dependency set for build-font.py; nothing here is importable.
+package = false

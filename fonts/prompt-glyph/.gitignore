@@ -1,0 +1,4 @@
+# uv creates these when iterating on build-font.py locally. The Nix build takes
+# its dependencies from nixpkgs instead and never looks at them.
+.venv/
+__pycache__/
