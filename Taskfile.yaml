@@ -42,3 +42,15 @@ tasks:
     cmds:
       - task: apply
         vars: { EXTRA_ARGS: "--update" }
+
+  test:
+    desc: "Run all tests"
+    cmds:
+      - task: test:prompt-glyph
+
+  test:prompt-glyph:
+    desc: "Test the Starship prompt glyph font build"
+    dir: fonts/prompt-glyph
+    cmds:
+      # Set inline because some shells export this empty, which uv rejects.
+      - UV_PYTHON_DOWNLOADS=auto uv run --frozen pytest -q

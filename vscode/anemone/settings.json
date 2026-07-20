@@ -125,7 +125,11 @@
   "claudeCode.preferredLocation": "panel",
   "claudeCode.selectedModel": "opus[1m]",
   "update.mode": "manual",
-  "terminal.integrated.fontFamily": "'Calex Code JP', 'Hack Nerd Font'",
+  // 'Prompt Glyphs' is last so it only serves the two prompt codepoints it
+  // contains; the fonts before it keep supplying the metrics and everything
+  // else. Ghostty routes those codepoints with font-codepoint-map instead,
+  // which VSCode has no equivalent of.
+  "terminal.integrated.fontFamily": "'Calex Code JP', 'Hack Nerd Font', 'Prompt Glyphs'",
   "markdown-preview-enhanced.previewTheme": "github-dark.css",
   "workbench.secondarySideBar.defaultVisibility": "hidden",
   "claudeCode.useTerminal": true,

@@ -42,6 +42,7 @@
                 nixpkgs.overlays = [
                   (final: prev: {
                     calex-code-jp = prev.callPackage (dotfilesPath "fonts/calex-code-jp/default.nix") { };
+                    prompt-glyph = prev.callPackage (dotfilesPath "fonts/prompt-glyph/default.nix") { };
                   })
                   # Skip OCI setuid-mode test that fails under the Nix sandbox.
                   # The sandbox cannot preserve the setuid bit, so the test sees
