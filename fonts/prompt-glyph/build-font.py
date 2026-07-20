@@ -19,7 +19,7 @@ from pathlib import Path
 from fontTools.colorLib.builder import buildCOLR, buildCPAL
 from fontTools.fontBuilder import FontBuilder
 from fontTools.pens.ttGlyphPen import TTGlyphPen
-from fontTools.ttLib import TTFont, newTable
+from fontTools.ttLib import newTable
 from fontTools.ttLib.tables.sbixGlyph import Glyph as SbixGlyph
 from fontTools.ttLib.tables.sbixStrike import Strike as SbixStrike
 from PIL import Image
