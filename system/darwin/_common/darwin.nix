@@ -97,6 +97,9 @@
       AppleSymbolicHotKeys = {
         "64" = { enabled = 0; };   # Cmd+Space (Spotlight)
         "65" = { enabled = 0; };   # Cmd+Option+Space (Spotlight)
+        # Disable macOS screenshot shortcuts that clash with Shottr
+        "28" = { enabled = 0; };   # Shift+Cmd+3 (save screen) -> Shottr "Repeat area screenshot"
+        "30" = { enabled = 0; };   # Shift+Cmd+4 (save selection) -> Shottr "Any window screenshot"
       };
     };
     "NSGlobalDomain" = {
