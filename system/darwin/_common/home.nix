@@ -17,6 +17,9 @@ in
   targets.darwin.linkApps.enable = true;
 
   home.packages = with pkgs; [
+    # Nix tools
+    nh
+
     # Cli tools
     neovim
     git
@@ -50,6 +53,17 @@ in
       ".config/karabiner/karabiner.json" = "karabiner/karabiner.json";
       ".config/ghostty/config" = "ghostty/config";
     };
+
+    # cleanup old files
+    programs.nh = {
+      enable = true;
+      clean = {
+        enable = true;
+        dates = "weekly";
+        extraArgs = "--keep-since 30d --keep-one";
+      };
+    };
+
 
   imports = [
     # Import default packages
