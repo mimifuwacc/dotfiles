@@ -1,4 +1,4 @@
-# Development Workflow Rules
+# Development workflow rules
 
 Rules for development practices and code style.
 

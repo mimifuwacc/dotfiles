@@ -1,4 +1,4 @@
-# Testing & Application Rules
+# Testing & application rules
 
 Rules for testing and applying configuration changes.
 

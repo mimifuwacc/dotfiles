@@ -1,4 +1,4 @@
-# File Management Rules
+# File management rules
 
 Rules for writing `home.file` entries.
 

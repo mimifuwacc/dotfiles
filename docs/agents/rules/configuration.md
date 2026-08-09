@@ -1,4 +1,4 @@
-# Configuration Rules
+# Configuration rules
 
 Rules for managing Nix configurations in this repository.
 

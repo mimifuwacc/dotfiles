@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a macOS (Darwin) dotfiles repository using Nix flakes for declarative system configuration. The setup uses nix-darwin for system-level configuration and home-manager for user-level configuration, targeting Apple Silicon (aarch64-darwin).
 
-**Important**: See `.claude/rules/` for detailed rules when working with this repository.
+**Important**: See `docs/agents/rules/` for detailed rules when working with this repository.
 
 ## Quick Start
 
@@ -41,9 +41,10 @@ dotfiles/
 │   │   └── settings.json      # VSCode settings for anemone
 │   └── nemophila/
 │       └── settings.json      # VSCode settings for nemophila
-├── .claude/
-│   ├── CLAUDE.md               # This file
-│   └── rules/                  # Detailed rules by category
+├── AGENTS.md                    # Main instructions for coding agents
+├── CLAUDE.md -> AGENTS.md       # Claude Code compatibility
+├── .claude -> docs/agents       # Claude Code rules compatibility
+├── docs/agents/rules/           # Detailed rules by category
 ├── Taskfile.yaml               # Task commands
 └── [other config files...]
 ```
@@ -100,7 +101,7 @@ Edit `<hostname>/hosts.nix`:
     "inline.txt".text = "Direct content";  # tiny inline content
   };
   # For repo files, use the storeCopies / liveSymlinks helpers from
-  # _common/file-helpers.nix (see .claude/rules/files.md).
+  # _common/file-helpers.nix (see docs/agents/rules/files.md).
 }
 ```
 
@@ -122,7 +123,7 @@ module**, including `hosts.nix` — it does not depend on the caller. For
 `home.file` entries, prefer the `storeCopies` / `liveSymlinks` helpers (they use
 `dotfilesPath` internally); call it directly mainly for `imports`.
 
-See `.claude/rules/files.md` for details.
+See `docs/agents/rules/files.md` for details.
 
 ### Managing VSCode Settings
 
@@ -204,7 +205,7 @@ Error: This configuration is for 'anemone', but current hostname is 'nemophila'
 
 ### Path Resolution Issues
 
-See `.claude/rules/files.md` for `dotfilesPath` function limitations and solutions.
+See `docs/agents/rules/files.md` for `dotfilesPath` function limitations and solutions.
 
 ## Shell & Tools
 
@@ -217,8 +218,8 @@ Configuration linked from repository via home-manager.
 
 ## Related Documentation
 
-- `.claude/rules/configuration.md` - Configuration management rules
-- `.claude/rules/files.md` - File path and `dotfilesPath` function rules
-- `.claude/rules/security.md` - Hostname validation and safety
-- `.claude/rules/testing.md` - Testing and application procedures
-- `.claude/rules/workflow.md` - Development workflow and code style
+- `docs/agents/rules/configuration.md` - Configuration management rules
+- `docs/agents/rules/files.md` - File path and `dotfilesPath` function rules
+- `docs/agents/rules/security.md` - Hostname validation and safety
+- `docs/agents/rules/testing.md` - Testing and application procedures
+- `docs/agents/rules/workflow.md` - Development workflow and code style

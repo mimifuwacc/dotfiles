@@ -1,4 +1,4 @@
-# Security & Validation Rules
+# Security & validation rules
 
 Rules for ensuring safe and correct configuration application.
 
