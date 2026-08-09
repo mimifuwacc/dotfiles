@@ -37,7 +37,7 @@ tasks:
 
         exec "$HOME/dotfiles/system/darwin/apply.sh" "$TARGET" {{.EXTRA_ARGS}}
 
-  apply:update:
+  update:
     desc: "Update flake.lock and apply"
     cmds:
       - task: apply
