@@ -48,8 +48,7 @@ in
     }
     # Frequently edited: live symlink so changes take effect immediately.
     // liveSymlinks {
-      ".config/nvim/init.lua" = "nvim/init.lua";
-      ".config/nvim/lua" = "nvim/lua";
+      ".config/nvim" = "nvim";
       ".config/karabiner/karabiner.json" = "karabiner/karabiner.json";
       ".config/ghostty/config" = "ghostty/config";
     };
