@@ -42,6 +42,21 @@ tasks:
     cmds:
       - task: apply
         vars: { EXTRA_ARGS: "--update" }
+      - task: push-flake-lock
+
+  push-flake-lock:
+    desc: "Push flake.lock to GitHub"
+    internal: true
+    cmds:
+      - |
+        if [ -z "$(git status --porcelain)" ]; then
+          echo "flake.lock is up to date, nothing to push"
+          exit 0
+        fi
+
+        git add system/${DOTFILES_HOSTNAME}/flake.lock
+        git commit -m "chore(deps): update ${DOTFILES_HOSTNAME} flake.lock ${GITHUB_SHA:-$(date +%Y-%m-%d %H:%M:%S +09:00)}"
+        # git push origin HEAD
 
   test:
     desc: "Run all tests"
