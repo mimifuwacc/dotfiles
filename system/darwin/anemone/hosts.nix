@@ -21,6 +21,7 @@
     "google-chrome"
 
     "font-genjyuugothic"
+    "scroll-reverser"
 
     "microsoft-word"
     "microsoft-excel"
@@ -63,6 +64,7 @@
       cmatrix
 
       mise
+      codex
     ];
 
     home.file = liveSymlinks {

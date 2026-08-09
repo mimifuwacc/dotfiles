@@ -139,4 +139,5 @@
   "workbench.panel.showLabels": false,
   "workbench.productIconTheme": "material-product-icons",
   "terminal.integrated.enableMultiLinePasteWarning": "never",
+  "chatgpt.composerEnterBehavior": "cmdAlways",
 }
