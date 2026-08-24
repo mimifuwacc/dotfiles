@@ -69,6 +69,7 @@
 
     home.file = liveSymlinks {
       "Library/Application Support/Code/User/settings.json" = "vscode/anemone/settings.json";
+      ".codex/config.toml" = "codex/config.toml";
     };
 
     programs.zsh.initContent = ''
